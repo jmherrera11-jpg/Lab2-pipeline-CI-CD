@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package controlador;
+
+import modelo.Usuario;
+import java.util.HashMap;
+import java.util.Map;
+
+public class AuthController {
+    private Map&lt;String, Usuario&gt; usuarios;
+    private Usuario usuarioActual;
+    
+<span class="fc" id="L11">    public AuthController() {</span>
+<span class="fc" id="L12">        usuarios = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L13">        cargarUsuariosDemo();</span>
+<span class="fc" id="L14">    }</span>
+    
+    private void cargarUsuariosDemo() {
+        // CORREGIDO: Usar claves en inglés para que coincidan con la comparación en DashboardView
+<span class="fc" id="L18">        usuarios.put(&quot;teacher&quot;, new Usuario(&quot;1&quot;, &quot;Prof. Anderson&quot;, &quot;profesor@academico.edu&quot;, &quot;teacher&quot;));</span>
+<span class="fc" id="L19">        usuarios.put(&quot;student&quot;, new Usuario(&quot;2&quot;, &quot;Juan Pérez&quot;, &quot;estudiante@academico.edu&quot;, &quot;student&quot;));</span>
+<span class="fc" id="L20">        usuarios.put(&quot;coordinator&quot;, new Usuario(&quot;3&quot;, &quot;Coord. García&quot;, &quot;coordinador@academico.edu&quot;, &quot;coordinator&quot;));</span>
+<span class="fc" id="L21">    }</span>
+    
+    public boolean login(String rol) {
+<span class="fc" id="L24">        usuarioActual = usuarios.get(rol);</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        return usuarioActual != null;</span>
+    }
+    
+    public void logout() {
+<span class="fc" id="L29">        usuarioActual = null;</span>
+<span class="fc" id="L30">    }</span>
+    
+    public Usuario getUsuarioActual() {
+<span class="fc" id="L33">        return usuarioActual;</span>
+    }
+    
+    public String getRolActual() {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        return usuarioActual != null ? usuarioActual.getRol() : null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

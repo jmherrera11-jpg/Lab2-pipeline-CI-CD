@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfesorController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">ProfesorController.java</span></div><h1>ProfesorController.java</h1><pre class="source lang-java linenums">package controlador;
+
+import modelo.Usuario;
+import util.MongoDBConnection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProfesorController {
+    private MongoCollection&lt;Document&gt; profesoresCollection;
+    
+<span class="fc" id="L18">    public ProfesorController() {</span>
+<span class="fc" id="L19">        MongoDatabase database = MongoDBConnection.getInstance().getDatabase();</span>
+<span class="fc" id="L20">        this.profesoresCollection = database.getCollection(&quot;profesores&quot;);</span>
+<span class="fc" id="L21">        inicializarDatosDemo();</span>
+<span class="fc" id="L22">    }</span>
+    
+    private void inicializarDatosDemo() {
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (profesoresCollection.countDocuments() == 0) {</span>
+<span class="nc" id="L26">            List&lt;Document&gt; profesoresDemo = new ArrayList&lt;&gt;();</span>
+            
+<span class="nc" id="L28">            profesoresDemo.add(new Document()</span>
+<span class="nc" id="L29">                .append(&quot;nombre&quot;, &quot;Prof. Anderson&quot;)</span>
+<span class="nc" id="L30">                .append(&quot;email&quot;, &quot;anderson@academico.edu&quot;)</span>
+<span class="nc" id="L31">                .append(&quot;rol&quot;, &quot;profesor&quot;));</span>
+                
+<span class="nc" id="L33">            profesoresDemo.add(new Document()</span>
+<span class="nc" id="L34">                .append(&quot;nombre&quot;, &quot;Prof. Martínez&quot;)</span>
+<span class="nc" id="L35">                .append(&quot;email&quot;, &quot;martinez@academico.edu&quot;)</span>
+<span class="nc" id="L36">                .append(&quot;rol&quot;, &quot;profesor&quot;));</span>
+                
+<span class="nc" id="L38">            profesoresDemo.add(new Document()</span>
+<span class="nc" id="L39">                .append(&quot;nombre&quot;, &quot;Prof. Rodríguez&quot;)</span>
+<span class="nc" id="L40">                .append(&quot;email&quot;, &quot;rodriguez@academico.edu&quot;)</span>
+<span class="nc" id="L41">                .append(&quot;rol&quot;, &quot;profesor&quot;));</span>
+                
+<span class="nc" id="L43">            profesoresCollection.insertMany(profesoresDemo);</span>
+        }
+<span class="fc" id="L45">    }</span>
+    
+    // CREATE
+    public boolean crearProfesor(String nombre, String email) {
+        // Verificar si ya existe el email
+<span class="fc" id="L50">        Document profesorExistente = profesoresCollection.find(</span>
+<span class="fc" id="L51">            Filters.eq(&quot;email&quot;, email)</span>
+<span class="fc" id="L52">        ).first();</span>
+        
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (profesorExistente != null) {</span>
+<span class="fc" id="L55">            return false;</span>
+        }
+        
+<span class="fc" id="L58">        Document nuevoProfesor = new Document()</span>
+<span class="fc" id="L59">            .append(&quot;nombre&quot;, nombre)</span>
+<span class="fc" id="L60">            .append(&quot;email&quot;, email)</span>
+<span class="fc" id="L61">            .append(&quot;rol&quot;, &quot;profesor&quot;);</span>
+            
+<span class="fc" id="L63">        profesoresCollection.insertOne(nuevoProfesor);</span>
+<span class="fc" id="L64">        return true;</span>
+    }
+    
+    // READ
+    public List&lt;Usuario&gt; obtenerTodosProfesores() {
+<span class="fc" id="L69">        List&lt;Usuario&gt; profesores = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (Document doc : profesoresCollection.find()) {</span>
+<span class="fc" id="L72">            profesores.add(documentToUsuario(doc));</span>
+        }
+        
+<span class="fc" id="L75">        return profesores;</span>
+    }
+    
+    public Usuario obtenerProfesorPorId(String id) {
+        try {
+<span class="fc" id="L80">            Document doc = profesoresCollection.find(</span>
+<span class="fc" id="L81">                Filters.eq(&quot;_id&quot;, new ObjectId(id))</span>
+<span class="fc" id="L82">            ).first();</span>
+            
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            return doc != null ? documentToUsuario(doc) : null;</span>
+<span class="nc" id="L85">        } catch (Exception e) {</span>
+<span class="nc" id="L86">            return null;</span>
+        }
+    }
+    
+    // UPDATE
+    public boolean actualizarProfesor(String id, String nombre, String email) {
+        try {
+<span class="fc" id="L93">            ObjectId objectId = new ObjectId(id);</span>
+            
+            // Verificar si el nuevo email ya existe en otro profesor
+<span class="fc" id="L96">            Usuario profesorActual = obtenerProfesorPorId(id);</span>
+<span class="pc bpc" id="L97" title="2 of 4 branches missed.">            if (profesorActual != null &amp;&amp; !profesorActual.getEmail().equals(email)) {</span>
+<span class="fc" id="L98">                Document profesorConMismoEmail = profesoresCollection.find(</span>
+<span class="fc" id="L99">                    Filters.and(</span>
+<span class="fc" id="L100">                        Filters.eq(&quot;email&quot;, email),</span>
+<span class="fc" id="L101">                        Filters.ne(&quot;_id&quot;, objectId)</span>
+                    )
+<span class="fc" id="L103">                ).first();</span>
+                
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                if (profesorConMismoEmail != null) {</span>
+<span class="nc" id="L106">                    return false;</span>
+                }
+            }
+            
+<span class="fc" id="L110">            profesoresCollection.updateOne(</span>
+<span class="fc" id="L111">                Filters.eq(&quot;_id&quot;, objectId),</span>
+<span class="fc" id="L112">                Updates.combine(</span>
+<span class="fc" id="L113">                    Updates.set(&quot;nombre&quot;, nombre),</span>
+<span class="fc" id="L114">                    Updates.set(&quot;email&quot;, email)</span>
+                )
+            );
+            
+<span class="fc" id="L118">            return true;</span>
+<span class="nc" id="L119">        } catch (Exception e) {</span>
+<span class="nc" id="L120">            return false;</span>
+        }
+    }
+    
+    // DELETE
+    public boolean eliminarProfesor(String id) {
+        try {
+<span class="fc" id="L127">            profesoresCollection.deleteOne(Filters.eq(&quot;_id&quot;, new ObjectId(id)));</span>
+<span class="fc" id="L128">            return true;</span>
+<span class="nc" id="L129">        } catch (Exception e) {</span>
+<span class="nc" id="L130">            return false;</span>
+        }
+    }
+    
+    // Métodos adicionales
+    public List&lt;Usuario&gt; buscarProfesores(String criterio) {
+<span class="fc" id="L136">        List&lt;Usuario&gt; resultados = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (Document doc : profesoresCollection.find(</span>
+<span class="fc" id="L139">            Filters.or(</span>
+<span class="fc" id="L140">                Filters.regex(&quot;nombre&quot;, &quot;.*&quot; + criterio + &quot;.*&quot;, &quot;i&quot;),</span>
+<span class="fc" id="L141">                Filters.regex(&quot;email&quot;, &quot;.*&quot; + criterio + &quot;.*&quot;, &quot;i&quot;)</span>
+            )
+        )) {
+<span class="fc" id="L144">            resultados.add(documentToUsuario(doc));</span>
+        }
+        
+<span class="fc" id="L147">        return resultados;</span>
+    }
+    
+    private Usuario documentToUsuario(Document doc) {
+<span class="fc" id="L151">        Usuario usuario = new Usuario();</span>
+<span class="fc" id="L152">        usuario.setId(doc.getObjectId(&quot;_id&quot;).toString());</span>
+<span class="fc" id="L153">        usuario.setNombre(doc.getString(&quot;nombre&quot;));</span>
+<span class="fc" id="L154">        usuario.setEmail(doc.getString(&quot;email&quot;));</span>
+<span class="fc" id="L155">        usuario.setRol(doc.getString(&quot;rol&quot;));</span>
+<span class="fc" id="L156">        return usuario;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

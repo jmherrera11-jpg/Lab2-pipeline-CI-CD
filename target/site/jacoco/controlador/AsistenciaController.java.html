@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsistenciaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">AsistenciaController.java</span></div><h1>AsistenciaController.java</h1><pre class="source lang-java linenums">package controlador;
+
+import modelo.Asistencia;
+import modelo.Estudiante;
+import util.MongoDBConnection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
+
+import java.util.*;
+
+public class AsistenciaController {
+    private MongoCollection&lt;Document&gt; asistenciasCollection;
+    private MongoCollection&lt;Document&gt; estudiantesCollection;
+    private EstudianteController estudianteController;
+    
+<span class="fc" id="L18">    public AsistenciaController() {</span>
+<span class="fc" id="L19">        MongoDatabase database = MongoDBConnection.getInstance().getDatabase();</span>
+<span class="fc" id="L20">        this.asistenciasCollection = database.getCollection(&quot;asistencias&quot;);</span>
+<span class="fc" id="L21">        this.estudiantesCollection = database.getCollection(&quot;estudiantes&quot;);</span>
+<span class="fc" id="L22">        this.estudianteController = new EstudianteController();</span>
+        
+<span class="fc" id="L24">        inicializarDatosDemo();</span>
+<span class="fc" id="L25">    }</span>
+    
+    private void inicializarDatosDemo() {
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (estudiantesCollection.countDocuments() == 0) {</span>
+<span class="nc" id="L29">            estudianteController.crearEstudiante(&quot;2023001&quot;, &quot;Juan Pérez&quot;, &quot;juan@email.com&quot;);</span>
+<span class="nc" id="L30">            estudianteController.crearEstudiante(&quot;2023002&quot;, &quot;María García&quot;, &quot;maria@email.com&quot;);</span>
+<span class="nc" id="L31">            estudianteController.crearEstudiante(&quot;2023003&quot;, &quot;Carlos López&quot;, &quot;carlos@email.com&quot;);</span>
+            
+<span class="nc" id="L33">            Document estudiante4 = new Document()</span>
+<span class="nc" id="L34">                .append(&quot;numeroEstudiante&quot;, &quot;2023004&quot;)</span>
+<span class="nc" id="L35">                .append(&quot;nombre&quot;, &quot;Ana Martínez&quot;)</span>
+<span class="nc" id="L36">                .append(&quot;email&quot;, &quot;ana@email.com&quot;)</span>
+<span class="nc" id="L37">                .append(&quot;status&quot;, &quot;inactive&quot;);</span>
+<span class="nc" id="L38">            estudiantesCollection.insertOne(estudiante4);</span>
+        }
+<span class="fc" id="L40">    }</span>
+    
+    public List&lt;Estudiante&gt; obtenerTodosEstudiantes() {
+<span class="fc" id="L43">        return estudianteController.obtenerTodosEstudiantes();</span>
+    }
+    
+    public void registrarAsistencia(String cursoId, Map&lt;String, String&gt; asistencias) {
+<span class="fc" id="L47">        List&lt;Document&gt; registros = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L48">        Date fecha = new Date();</span>
+        
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; entry : asistencias.entrySet()) {</span>
+<span class="fc" id="L51">            Document asistencia = new Document()</span>
+<span class="fc" id="L52">                .append(&quot;cursoId&quot;, cursoId)</span>
+<span class="fc" id="L53">                .append(&quot;estudianteId&quot;, entry.getKey())</span>
+<span class="fc" id="L54">                .append(&quot;fecha&quot;, fecha)</span>
+<span class="fc" id="L55">                .append(&quot;estado&quot;, entry.getValue());</span>
+                
+<span class="fc" id="L57">            registros.add(asistencia);</span>
+        }
+        
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (!registros.isEmpty()) {</span>
+<span class="fc" id="L61">            asistenciasCollection.insertMany(registros);</span>
+        }
+<span class="fc" id="L63">    }</span>
+    
+    public Map&lt;String, String&gt; obtenerAsistenciaPorCurso(String cursoId) {
+<span class="fc" id="L66">        Map&lt;String, String&gt; resultado = new HashMap&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for (Document doc : asistenciasCollection.find(Filters.eq(&quot;cursoId&quot;, cursoId))) {</span>
+<span class="fc" id="L69">            resultado.put(doc.getString(&quot;estudianteId&quot;), doc.getString(&quot;estado&quot;));</span>
+        }
+        
+<span class="fc" id="L72">        return resultado;</span>
+    }
+    
+    public double calcularPorcentajeAsistencia(String estudianteId) {
+<span class="fc" id="L76">        long total = asistenciasCollection.countDocuments(</span>
+<span class="fc" id="L77">            Filters.eq(&quot;estudianteId&quot;, estudianteId)</span>
+        );
+        
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (total == 0) {</span>
+<span class="fc" id="L81">            return 0.0;</span>
+        }
+        
+<span class="fc" id="L84">        long presentes = asistenciasCollection.countDocuments(</span>
+<span class="fc" id="L85">            Filters.and(</span>
+<span class="fc" id="L86">                Filters.eq(&quot;estudianteId&quot;, estudianteId),</span>
+<span class="fc" id="L87">                Filters.eq(&quot;estado&quot;, &quot;present&quot;)</span>
+            )
+        );
+        
+<span class="fc" id="L91">        return (presentes * 100.0) / total;</span>
+    }
+ // Agregar este método a AsistenciaController.java
+    public void limpiarAsistenciasEstudiante(String estudianteId) {
+        // Opcional: Implementar limpieza si es necesario para tests
+<span class="nc" id="L96">    }</span>
+
+    public void limpiarAsistenciasPorCurso(String cursoId) {
+<span class="nc" id="L99">        asistenciasCollection.deleteMany(Filters.eq(&quot;cursoId&quot;, cursoId));</span>
+<span class="nc" id="L100">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

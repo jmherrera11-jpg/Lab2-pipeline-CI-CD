@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CursoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">CursoController.java</span></div><h1>CursoController.java</h1><pre class="source lang-java linenums">	package controlador;
+
+import modelo.Curso;
+import util.MongoDBConnection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CursoController {
+    private MongoCollection&lt;Document&gt; cursosCollection;
+    
+<span class="fc" id="L18">    public CursoController() {</span>
+<span class="fc" id="L19">        MongoDatabase database = MongoDBConnection.getInstance().getDatabase();</span>
+<span class="fc" id="L20">        this.cursosCollection = database.getCollection(&quot;cursos&quot;);</span>
+<span class="fc" id="L21">        inicializarDatosDemo();</span>
+<span class="fc" id="L22">    }</span>
+    
+    private void inicializarDatosDemo() {
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (cursosCollection.countDocuments() == 0) {</span>
+            // Insertar datos demo si la colección está vacía
+<span class="nc" id="L27">            List&lt;Document&gt; cursosDemo = new ArrayList&lt;&gt;();</span>
+            
+<span class="nc" id="L29">            cursosDemo.add(new Document()</span>
+<span class="nc" id="L30">                .append(&quot;codigo&quot;, &quot;CS101&quot;)</span>
+<span class="nc" id="L31">                .append(&quot;nombre&quot;, &quot;Sistemas de Base de Datos&quot;)</span>
+<span class="nc" id="L32">                .append(&quot;horario&quot;, &quot;Lun/Mie 9:00-10:30&quot;)</span>
+<span class="nc" id="L33">                .append(&quot;aula&quot;, &quot;Sala 101&quot;)</span>
+<span class="nc" id="L34">                .append(&quot;profesorId&quot;, null));</span>
+                
+<span class="nc" id="L36">            cursosDemo.add(new Document()</span>
+<span class="nc" id="L37">                .append(&quot;codigo&quot;, &quot;CS102&quot;)</span>
+<span class="nc" id="L38">                .append(&quot;nombre&quot;, &quot;Cálculo I&quot;)</span>
+<span class="nc" id="L39">                .append(&quot;horario&quot;, &quot;Mar/Jue 11:00-12:30&quot;)</span>
+<span class="nc" id="L40">                .append(&quot;aula&quot;, &quot;Sala 102&quot;)</span>
+<span class="nc" id="L41">                .append(&quot;profesorId&quot;, null));</span>
+                
+<span class="nc" id="L43">            cursosDemo.add(new Document()</span>
+<span class="nc" id="L44">                .append(&quot;codigo&quot;, &quot;CS103&quot;)</span>
+<span class="nc" id="L45">                .append(&quot;nombre&quot;, &quot;Introducción a CS&quot;)</span>
+<span class="nc" id="L46">                .append(&quot;horario&quot;, &quot;Lun/Vie 14:00-15:30&quot;)</span>
+<span class="nc" id="L47">                .append(&quot;aula&quot;, &quot;Sala 103&quot;)</span>
+<span class="nc" id="L48">                .append(&quot;profesorId&quot;, null));</span>
+                
+<span class="nc" id="L50">            cursosCollection.insertMany(cursosDemo);</span>
+        }
+<span class="fc" id="L52">    }</span>
+    
+    // CREATE
+    public boolean crearCurso(String codigo, String nombre, String horario, String aula, String profesorId) {
+        // Verificar si ya existe el código
+<span class="fc" id="L57">        Document cursoExistente = cursosCollection.find(Filters.eq(&quot;codigo&quot;, codigo)).first();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (cursoExistente != null) {</span>
+<span class="fc" id="L59">            return false;</span>
+        }
+        
+<span class="fc" id="L62">        Document nuevoCurso = new Document()</span>
+<span class="fc" id="L63">            .append(&quot;codigo&quot;, codigo)</span>
+<span class="fc" id="L64">            .append(&quot;nombre&quot;, nombre)</span>
+<span class="fc" id="L65">            .append(&quot;horario&quot;, horario)</span>
+<span class="fc" id="L66">            .append(&quot;aula&quot;, aula)</span>
+<span class="fc" id="L67">            .append(&quot;profesorId&quot;, profesorId);</span>
+            
+<span class="fc" id="L69">        cursosCollection.insertOne(nuevoCurso);</span>
+<span class="fc" id="L70">        return true;</span>
+    }
+    
+    // READ
+    public List&lt;Curso&gt; obtenerTodosCursos() {
+<span class="fc" id="L75">        List&lt;Curso&gt; cursos = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (Document doc : cursosCollection.find()) {</span>
+<span class="fc" id="L78">            cursos.add(documentToCurso(doc));</span>
+        }
+        
+<span class="fc" id="L81">        return cursos;</span>
+    }
+    
+    public Curso obtenerCursoPorId(String id) {
+        try {
+<span class="fc" id="L86">            Document doc = cursosCollection.find(Filters.eq(&quot;_id&quot;, new ObjectId(id))).first();</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            return doc != null ? documentToCurso(doc) : null;</span>
+<span class="fc" id="L88">        } catch (Exception e) {</span>
+<span class="fc" id="L89">            return null;</span>
+        }
+    }
+    
+    public Curso obtenerCursoPorCodigo(String codigo) {
+<span class="fc" id="L94">        Document doc = cursosCollection.find(Filters.eq(&quot;codigo&quot;, codigo)).first();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        return doc != null ? documentToCurso(doc) : null;</span>
+    }
+    
+    // UPDATE
+    public boolean actualizarCurso(String id, String codigo, String nombre, String horario, String aula, String profesorId) {
+        try {
+<span class="fc" id="L101">            ObjectId objectId = new ObjectId(id);</span>
+            
+            // Verificar si el nuevo código ya existe en otro curso
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (!obtenerCursoPorId(id).getCodigo().equals(codigo)) {</span>
+<span class="nc" id="L105">                Document cursoConMismoCodigo = cursosCollection.find(</span>
+<span class="nc" id="L106">                    Filters.and(</span>
+<span class="nc" id="L107">                        Filters.eq(&quot;codigo&quot;, codigo),</span>
+<span class="nc" id="L108">                        Filters.ne(&quot;_id&quot;, objectId)</span>
+                    )
+<span class="nc" id="L110">                ).first();</span>
+                
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (cursoConMismoCodigo != null) {</span>
+<span class="nc" id="L113">                    return false;</span>
+                }
+            }
+            
+<span class="fc" id="L117">            cursosCollection.updateOne(</span>
+<span class="fc" id="L118">                Filters.eq(&quot;_id&quot;, objectId),</span>
+<span class="fc" id="L119">                Updates.combine(</span>
+<span class="fc" id="L120">                    Updates.set(&quot;codigo&quot;, codigo),</span>
+<span class="fc" id="L121">                    Updates.set(&quot;nombre&quot;, nombre),</span>
+<span class="fc" id="L122">                    Updates.set(&quot;horario&quot;, horario),</span>
+<span class="fc" id="L123">                    Updates.set(&quot;aula&quot;, aula),</span>
+<span class="fc" id="L124">                    Updates.set(&quot;profesorId&quot;, profesorId)</span>
+                )
+            );
+            
+<span class="fc" id="L128">            return true;</span>
+<span class="nc" id="L129">        } catch (Exception e) {</span>
+<span class="nc" id="L130">            return false;</span>
+        }
+    }
+    
+    // DELETE
+    public boolean eliminarCurso(String id) {
+        try {
+<span class="fc" id="L137">            cursosCollection.deleteOne(Filters.eq(&quot;_id&quot;, new ObjectId(id)));</span>
+<span class="fc" id="L138">            return true;</span>
+<span class="nc" id="L139">        } catch (Exception e) {</span>
+<span class="nc" id="L140">            return false;</span>
+        }
+    }
+    
+    // Métodos adicionales
+    public List&lt;Curso&gt; buscarCursos(String criterio) {
+<span class="fc" id="L146">        List&lt;Curso&gt; resultados = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L147">        String criterioLower = criterio.toLowerCase();</span>
+        
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (Document doc : cursosCollection.find()) {</span>
+<span class="fc" id="L150">            Curso curso = documentToCurso(doc);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (curso.getNombre().toLowerCase().contains(criterioLower) ||</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                curso.getCodigo().toLowerCase().contains(criterioLower) ||</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                curso.getHorario().toLowerCase().contains(criterioLower)) {</span>
+<span class="fc" id="L154">                resultados.add(curso);</span>
+            }
+        }
+        
+<span class="fc" id="L158">        return resultados;</span>
+    }
+    
+    public int contarCursos() {
+<span class="fc" id="L162">        return (int) cursosCollection.countDocuments();</span>
+    }
+    
+    private Curso documentToCurso(Document doc) {
+<span class="fc" id="L166">        Curso curso = new Curso();</span>
+<span class="fc" id="L167">        curso.setId(doc.getObjectId(&quot;_id&quot;).toString());</span>
+<span class="fc" id="L168">        curso.setCodigo(doc.getString(&quot;codigo&quot;));</span>
+<span class="fc" id="L169">        curso.setNombre(doc.getString(&quot;nombre&quot;));</span>
+<span class="fc" id="L170">        curso.setHorario(doc.getString(&quot;horario&quot;));</span>
+<span class="fc" id="L171">        curso.setAula(doc.getString(&quot;aula&quot;));</span>
+<span class="fc" id="L172">        curso.setProfesorId(doc.getString(&quot;profesorId&quot;));</span>
+<span class="fc" id="L173">        return curso;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

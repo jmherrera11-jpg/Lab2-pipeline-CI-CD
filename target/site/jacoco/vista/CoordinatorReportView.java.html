@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoordinatorReportView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">vista</a> &gt; <span class="el_source">CoordinatorReportView.java</span></div><h1>CoordinatorReportView.java</h1><pre class="source lang-java linenums">package vista;
+
+import controlador.AuthController;
+import controlador.ReporteController;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class CoordinatorReportView extends JFrame {
+    private AuthController authController;
+    private ReporteController reporteController;
+    
+<span class="nc" id="L13">    public CoordinatorReportView(AuthController authController) {</span>
+<span class="nc" id="L14">        this.authController = authController;</span>
+<span class="nc" id="L15">        this.reporteController = new ReporteController();</span>
+<span class="nc" id="L16">        initUI();</span>
+<span class="nc" id="L17">    }</span>
+    
+    private void initUI() {
+<span class="nc" id="L20">        setTitle(&quot;Coordinator Reports&quot;);</span>
+<span class="nc" id="L21">        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L22">        setSize(1000, 700);</span>
+<span class="nc" id="L23">        setLocationRelativeTo(null);</span>
+        
+<span class="nc" id="L25">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L26">        mainPanel.setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L27">        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));</span>
+        
+        // Header con botones
+<span class="nc" id="L30">        JPanel headerPanel = createHeaderPanel();</span>
+        
+        // Panel de pestañas
+<span class="nc" id="L33">        JTabbedPane tabbedPane = new JTabbedPane();</span>
+<span class="nc" id="L34">        tabbedPane.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+        
+        // Pestaña de reporte general
+<span class="nc" id="L37">        tabbedPane.addTab(&quot;General Report&quot;, createGeneralReportPanel());</span>
+        
+        // Pestaña de reporte por curso
+<span class="nc" id="L40">        tabbedPane.addTab(&quot;Course Report&quot;, createCourseReportPanel());</span>
+        
+        // Pestaña de reporte de estudiantes
+<span class="nc" id="L43">        tabbedPane.addTab(&quot;Student Report&quot;, createStudentReportPanel());</span>
+        
+<span class="nc" id="L45">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L46">        mainPanel.add(tabbedPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L48">        add(mainPanel);</span>
+<span class="nc" id="L49">    }</span>
+    
+    private JPanel createHeaderPanel() {
+<span class="nc" id="L52">        JPanel headerPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L53">        headerPanel.setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L54">        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));</span>
+        
+<span class="nc" id="L56">        JLabel titleLabel = new JLabel(&quot;Attendance Reports&quot;);</span>
+<span class="nc" id="L57">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L58">        titleLabel.setForeground(new Color(30, 41, 59));</span>
+        
+        // Panel de botones
+<span class="nc" id="L61">        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));</span>
+<span class="nc" id="L62">        buttonPanel.setOpaque(false);</span>
+        
+        // Botón de volver al dashboard
+<span class="nc" id="L65">        JButton backButton = new JButton(&quot;Back to Dashboard&quot;);</span>
+<span class="nc" id="L66">        backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L67">        backButton.setBackground(new Color(100, 116, 139));</span>
+<span class="nc" id="L68">        backButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L69">        backButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));</span>
+<span class="nc" id="L70">        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L71">        backButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L72">            dispose();</span>
+<span class="nc" id="L73">            new DashboardView(authController).setVisible(true);</span>
+<span class="nc" id="L74">        });</span>
+        
+        // Botón de logout
+<span class="nc" id="L77">        JButton logoutButton = new JButton(&quot;Logout&quot;);</span>
+<span class="nc" id="L78">        logoutButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L79">        logoutButton.setBackground(new Color(239, 68, 68));</span>
+<span class="nc" id="L80">        logoutButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L81">        logoutButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));</span>
+<span class="nc" id="L82">        logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L83">        logoutButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L84">            authController.logout();</span>
+<span class="nc" id="L85">            dispose();</span>
+<span class="nc" id="L86">            new LoginView(authController).setVisible(true);</span>
+<span class="nc" id="L87">        });</span>
+        
+<span class="nc" id="L89">        buttonPanel.add(backButton);</span>
+<span class="nc" id="L90">        buttonPanel.add(logoutButton);</span>
+        
+<span class="nc" id="L92">        headerPanel.add(titleLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L93">        headerPanel.add(buttonPanel, BorderLayout.EAST);</span>
+        
+<span class="nc" id="L95">        return headerPanel;</span>
+    }
+    
+    private JPanel createGeneralReportPanel() {
+<span class="nc" id="L99">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L100">        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+        
+        // Generar reporte
+<span class="nc" id="L103">        var reporte = reporteController.generarReporteGeneral();</span>
+        
+        // Panel de estadísticas
+<span class="nc" id="L106">        JPanel statsPanel = createGeneralStatsPanel(reporte);</span>
+        
+        // Panel de estudiantes en riesgo
+<span class="nc" id="L109">        JPanel riskPanel = createRiskStudentsPanel(reporte);</span>
+        
+<span class="nc" id="L111">        JPanel contentPanel = new JPanel();</span>
+<span class="nc" id="L112">        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L113">        contentPanel.add(statsPanel);</span>
+<span class="nc" id="L114">        contentPanel.add(Box.createVerticalStrut(20));</span>
+<span class="nc" id="L115">        contentPanel.add(riskPanel);</span>
+        
+<span class="nc" id="L117">        JScrollPane scrollPane = new JScrollPane(contentPanel);</span>
+<span class="nc" id="L118">        scrollPane.setBorder(null);</span>
+        
+<span class="nc" id="L120">        panel.add(scrollPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L122">        return panel;</span>
+    }
+    
+    private JPanel createGeneralStatsPanel(java.util.Map&lt;String, Object&gt; reporte) {
+<span class="nc" id="L126">        JPanel panel = new JPanel(new GridLayout(2, 3, 15, 15));</span>
+<span class="nc" id="L127">        panel.setBorder(BorderFactory.createTitledBorder(</span>
+<span class="nc" id="L128">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+            &quot;General Statistics&quot;
+        ));
+        
+        // Total Students
+<span class="nc" id="L133">        panel.add(createStatCard(&quot;Total Students&quot;, </span>
+<span class="nc" id="L134">            reporte.get(&quot;totalEstudiantes&quot;).toString(), </span>
+            new Color(59, 130, 246)));
+        
+        // Active Students
+<span class="nc" id="L138">        panel.add(createStatCard(&quot;Active Students&quot;, </span>
+<span class="nc" id="L139">            reporte.get(&quot;estudiantesActivos&quot;).toString(), </span>
+            new Color(34, 197, 94)));
+        
+        // Inactive Students
+<span class="nc" id="L143">        panel.add(createStatCard(&quot;Inactive Students&quot;, </span>
+<span class="nc" id="L144">            reporte.get(&quot;estudiantesInactivos&quot;).toString(), </span>
+            new Color(100, 116, 139)));
+        
+        // Average Attendance
+<span class="nc" id="L148">        double avgAttendance = (double) reporte.get(&quot;promedioAsistencia&quot;);</span>
+<span class="nc" id="L149">        panel.add(createStatCard(&quot;Average Attendance&quot;, </span>
+<span class="nc" id="L150">            String.format(&quot;%.1f%%&quot;, avgAttendance), </span>
+            new Color(168, 85, 247)));
+        
+        // At Risk Students
+<span class="nc" id="L154">        int atRisk = ((java.util.List&lt;?&gt;) reporte.get(&quot;estudiantesRiesgo&quot;)).size();</span>
+<span class="nc" id="L155">        panel.add(createStatCard(&quot;At Risk Students&quot;, </span>
+<span class="nc" id="L156">            String.valueOf(atRisk), </span>
+            new Color(245, 158, 11)));
+        
+        // Total Courses
+<span class="nc" id="L160">        panel.add(createStatCard(&quot;Total Courses&quot;, </span>
+<span class="nc" id="L161">            reporte.get(&quot;totalCursos&quot;).toString(), </span>
+            new Color(236, 72, 153)));
+        
+<span class="nc" id="L164">        return panel;</span>
+    }
+    
+    private JPanel createStatCard(String title, String value, Color color) {
+<span class="nc" id="L168">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L169">        panel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L170">        panel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L171">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L172">            BorderFactory.createEmptyBorder(15, 15, 15, 15)</span>
+        ));
+        
+<span class="nc" id="L175">        JPanel contentPanel = new JPanel();</span>
+<span class="nc" id="L176">        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L177">        contentPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L179">        JLabel titleLabel = new JLabel(title);</span>
+<span class="nc" id="L180">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L181">        titleLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L183">        JLabel valueLabel = new JLabel(value);</span>
+<span class="nc" id="L184">        valueLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 20));</span>
+<span class="nc" id="L185">        valueLabel.setForeground(color);</span>
+        
+<span class="nc" id="L187">        contentPanel.add(titleLabel);</span>
+<span class="nc" id="L188">        contentPanel.add(Box.createVerticalStrut(5));</span>
+<span class="nc" id="L189">        contentPanel.add(valueLabel);</span>
+        
+<span class="nc" id="L191">        panel.add(contentPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L193">        return panel;</span>
+    }
+    
+    private JPanel createRiskStudentsPanel(java.util.Map&lt;String, Object&gt; reporte) {
+<span class="nc" id="L197">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L198">        panel.setBorder(BorderFactory.createTitledBorder(</span>
+<span class="nc" id="L199">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+            &quot;Students at Risk (&lt; 75% Attendance)&quot;
+        ));
+        
+<span class="nc" id="L203">        java.util.List&lt;java.util.Map&lt;String, Object&gt;&gt; estudiantesRiesgo = </span>
+<span class="nc" id="L204">            (java.util.List&lt;java.util.Map&lt;String, Object&gt;&gt;) reporte.get(&quot;estudiantesRiesgo&quot;);</span>
+        
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (estudiantesRiesgo.isEmpty()) {</span>
+<span class="nc" id="L207">            JLabel noDataLabel = new JLabel(&quot;No students at risk&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L208">            noDataLabel.setFont(new Font(&quot;Arial&quot;, Font.ITALIC, 14));</span>
+<span class="nc" id="L209">            noDataLabel.setForeground(new Color(148, 163, 184));</span>
+<span class="nc" id="L210">            panel.add(noDataLabel, BorderLayout.CENTER);</span>
+<span class="nc" id="L211">        } else {</span>
+<span class="nc" id="L212">            String[] columnNames = {&quot;Student Name&quot;, &quot;Student ID&quot;, &quot;Attendance %&quot;, &quot;Affected Courses&quot;};</span>
+<span class="nc" id="L213">            Object[][] data = new Object[estudiantesRiesgo.size()][4];</span>
+            
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            for (int i = 0; i &lt; estudiantesRiesgo.size(); i++) {</span>
+<span class="nc" id="L216">                var datos = estudiantesRiesgo.get(i);</span>
+<span class="nc" id="L217">                modelo.Estudiante est = (modelo.Estudiante) datos.get(&quot;estudiante&quot;);</span>
+<span class="nc" id="L218">                double porcentaje = (double) datos.get(&quot;porcentajeAsistencia&quot;);</span>
+<span class="nc" id="L219">                java.util.List&lt;String&gt; cursos = (java.util.List&lt;String&gt;) datos.get(&quot;cursosAfectados&quot;);</span>
+                
+<span class="nc" id="L221">                data[i][0] = est.getNombre();</span>
+<span class="nc" id="L222">                data[i][1] = est.getNumeroEstudiante();</span>
+<span class="nc" id="L223">                data[i][2] = String.format(&quot;%.1f%%&quot;, porcentaje);</span>
+<span class="nc" id="L224">                data[i][3] = String.join(&quot;, &quot;, cursos);</span>
+            }
+            
+<span class="nc" id="L227">            JTable table = new JTable(data, columnNames);</span>
+<span class="nc" id="L228">            table.setRowHeight(35);</span>
+<span class="nc" id="L229">            table.getTableHeader().setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L230">            table.getTableHeader().setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L231">            table.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
+            
+<span class="nc" id="L233">            JScrollPane scrollPane = new JScrollPane(table);</span>
+<span class="nc" id="L234">            panel.add(scrollPane, BorderLayout.CENTER);</span>
+        }
+        
+<span class="nc" id="L237">        return panel;</span>
+    }
+    
+    private JPanel createCourseReportPanel() {
+<span class="nc" id="L241">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L242">        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+        
+<span class="nc" id="L244">        JLabel titleLabel = new JLabel(&quot;Select a course to view detailed report:&quot;);</span>
+<span class="nc" id="L245">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L246">        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));</span>
+        
+        // Panel de selección de curso
+<span class="nc" id="L249">        JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));</span>
+        
+<span class="nc" id="L251">        JComboBox&lt;String&gt; courseCombo = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L252">        courseCombo.addItem(&quot;Select a course...&quot;);</span>
+<span class="nc" id="L253">        courseCombo.addItem(&quot;CS101 - Database Systems&quot;);</span>
+<span class="nc" id="L254">        courseCombo.addItem(&quot;CS102 - Calculus I&quot;);</span>
+<span class="nc" id="L255">        courseCombo.addItem(&quot;CS103 - Intro to CS&quot;);</span>
+<span class="nc" id="L256">        courseCombo.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 14));</span>
+<span class="nc" id="L257">        courseCombo.setPreferredSize(new Dimension(300, 35));</span>
+        
+<span class="nc" id="L259">        JButton viewReportButton = new JButton(&quot;View Report&quot;);</span>
+<span class="nc" id="L260">        viewReportButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L261">        viewReportButton.setBackground(new Color(37, 99, 235));</span>
+<span class="nc" id="L262">        viewReportButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L263">        viewReportButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));</span>
+<span class="nc" id="L264">        viewReportButton.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L265">        viewReportButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L266">            int selectedIndex = courseCombo.getSelectedIndex();</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">            if (selectedIndex &gt; 0) {</span>
+<span class="nc" id="L268">                String courseId = &quot;CS&quot; + (100 + selectedIndex);</span>
+<span class="nc" id="L269">                mostrarReporteCurso(courseId);</span>
+            }
+<span class="nc" id="L271">        });</span>
+        
+<span class="nc" id="L273">        selectionPanel.add(courseCombo);</span>
+<span class="nc" id="L274">        selectionPanel.add(Box.createHorizontalStrut(20));</span>
+<span class="nc" id="L275">        selectionPanel.add(viewReportButton);</span>
+        
+<span class="nc" id="L277">        panel.add(titleLabel, BorderLayout.NORTH);</span>
+<span class="nc" id="L278">        panel.add(selectionPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L280">        return panel;</span>
+    }
+    
+    private void mostrarReporteCurso(String cursoId) {
+<span class="nc" id="L284">        var reporte = reporteController.generarReporteCurso(cursoId);</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (reporte == null) {</span>
+<span class="nc" id="L286">            JOptionPane.showMessageDialog(this, &quot;Course not found&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L287">            return;</span>
+        }
+        
+<span class="nc" id="L290">        modelo.Curso curso = (modelo.Curso) reporte.get(&quot;curso&quot;);</span>
+<span class="nc" id="L291">        double tasaAsistencia = (double) reporte.get(&quot;tasaAsistencia&quot;);</span>
+        
+<span class="nc" id="L293">        String message = String.format(</span>
+            &quot;&lt;html&gt;&lt;body style='width: 300px'&gt;&quot; +
+            &quot;&lt;h3&gt;%s - %s&lt;/h3&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Schedule:&lt;/b&gt; %s&lt;/p&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Room:&lt;/b&gt; %s&lt;/p&gt;&quot; +
+            &quot;&lt;hr&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Attendance Rate:&lt;/b&gt; %.1f%%&lt;/p&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Present:&lt;/b&gt; %d&lt;/p&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Late:&lt;/b&gt; %d&lt;/p&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Absent:&lt;/b&gt; %d&lt;/p&gt;&quot; +
+            &quot;&lt;p&gt;&lt;b&gt;Total Records:&lt;/b&gt; %d&lt;/p&gt;&quot; +
+            &quot;&lt;/body&gt;&lt;/html&gt;&quot;,
+<span class="nc" id="L305">            curso.getCodigo(), curso.getNombre(), curso.getHorario(), curso.getAula(),</span>
+<span class="nc" id="L306">            tasaAsistencia, reporte.get(&quot;presentes&quot;), reporte.get(&quot;tardios&quot;), </span>
+<span class="nc" id="L307">            reporte.get(&quot;ausentes&quot;), reporte.get(&quot;totalRegistros&quot;)</span>
+        );
+        
+<span class="nc" id="L310">        JOptionPane.showMessageDialog(this, message, &quot;Course Report&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="nc" id="L311">    }</span>
+    
+    private JPanel createStudentReportPanel() {
+<span class="nc" id="L314">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L315">        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+        
+<span class="nc" id="L317">        JLabel titleLabel = new JLabel(&quot;Student Attendance Report&quot;);</span>
+<span class="nc" id="L318">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L319">        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));</span>
+        
+        // Generar reporte de estudiantes
+<span class="nc" id="L322">        var reporte = reporteController.generarReporteEstudiantes();</span>
+        
+<span class="nc" id="L324">        String[] columnNames = {&quot;Student Name&quot;, &quot;Student ID&quot;, &quot;Status&quot;, &quot;Attendance %&quot;, &quot;Performance&quot;};</span>
+<span class="nc" id="L325">        Object[][] data = new Object[reporte.size()][5];</span>
+        
+<span class="nc bnc" id="L327" title="All 2 branches missed.">        for (int i = 0; i &lt; reporte.size(); i++) {</span>
+<span class="nc" id="L328">            var datos = reporte.get(i);</span>
+<span class="nc" id="L329">            modelo.Estudiante est = (modelo.Estudiante) datos.get(&quot;estudiante&quot;);</span>
+<span class="nc" id="L330">            double porcentaje = (double) datos.get(&quot;porcentajeAsistencia&quot;);</span>
+<span class="nc" id="L331">            String estado = (String) datos.get(&quot;estado&quot;);</span>
+            
+<span class="nc" id="L333">            data[i][0] = est.getNombre();</span>
+<span class="nc" id="L334">            data[i][1] = est.getNumeroEstudiante();</span>
+<span class="nc" id="L335">            data[i][2] = est.getStatus();</span>
+<span class="nc" id="L336">            data[i][3] = String.format(&quot;%.1f%%&quot;, porcentaje);</span>
+<span class="nc" id="L337">            data[i][4] = estado;</span>
+        }
+        
+<span class="nc" id="L340">        JTable table = new JTable(data, columnNames);</span>
+<span class="nc" id="L341">        table.setRowHeight(35);</span>
+<span class="nc" id="L342">        table.getTableHeader().setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L343">        table.getTableHeader().setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L344">        table.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
+        
+        // Personalizar renderer para la columna de performance
+<span class="nc" id="L347">        table.getColumnModel().getColumn(4).setCellRenderer(new PerformanceRenderer());</span>
+        
+<span class="nc" id="L349">        JScrollPane scrollPane = new JScrollPane(table);</span>
+        
+        // Botón de exportar
+<span class="nc" id="L352">        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));</span>
+<span class="nc" id="L353">        JButton exportButton = new JButton(&quot;Export to CSV&quot;);</span>
+<span class="nc" id="L354">        exportButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L355">        exportButton.setBackground(new Color(34, 197, 94));</span>
+<span class="nc" id="L356">        exportButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L357">        exportButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));</span>
+<span class="nc" id="L358">        exportButton.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L359">        exportButton.addActionListener(e -&gt; exportarReporte());</span>
+        
+<span class="nc" id="L361">        bottomPanel.add(exportButton);</span>
+        
+<span class="nc" id="L363">        panel.add(titleLabel, BorderLayout.NORTH);</span>
+<span class="nc" id="L364">        panel.add(scrollPane, BorderLayout.CENTER);</span>
+<span class="nc" id="L365">        panel.add(bottomPanel, BorderLayout.SOUTH);</span>
+        
+<span class="nc" id="L367">        return panel;</span>
+    }
+    
+<span class="nc" id="L370">    private class PerformanceRenderer extends javax.swing.table.DefaultTableCellRenderer {</span>
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            
+<span class="nc" id="L375">            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);</span>
+            
+<span class="nc" id="L377">            String performance = value.toString();</span>
+<span class="nc" id="L378">            setHorizontalAlignment(SwingConstants.CENTER);</span>
+<span class="nc" id="L379">            setFont(new Font(&quot;Arial&quot;, Font.BOLD, 11));</span>
+            
+            // Color basado en el desempeño
+<span class="nc bnc" id="L382" title="All 6 branches missed.">            switch (performance) {</span>
+                case &quot;Excelente&quot;:
+<span class="nc" id="L384">                    setBackground(new Color(220, 252, 231));</span>
+<span class="nc" id="L385">                    setForeground(new Color(21, 128, 61));</span>
+<span class="nc" id="L386">                    setBorder(BorderFactory.createLineBorder(new Color(187, 247, 208), 1));</span>
+<span class="nc" id="L387">                    break;</span>
+                case &quot;Bueno&quot;:
+<span class="nc" id="L389">                    setBackground(new Color(254, 249, 195));</span>
+<span class="nc" id="L390">                    setForeground(new Color(161, 98, 7));</span>
+<span class="nc" id="L391">                    setBorder(BorderFactory.createLineBorder(new Color(254, 240, 138), 1));</span>
+<span class="nc" id="L392">                    break;</span>
+                case &quot;Regular&quot;:
+<span class="nc" id="L394">                    setBackground(new Color(254, 226, 226));</span>
+<span class="nc" id="L395">                    setForeground(new Color(185, 28, 28));</span>
+<span class="nc" id="L396">                    setBorder(BorderFactory.createLineBorder(new Color(254, 202, 202), 1));</span>
+<span class="nc" id="L397">                    break;</span>
+                case &quot;Preocupante&quot;:
+<span class="nc" id="L399">                    setBackground(new Color(253, 242, 248));</span>
+<span class="nc" id="L400">                    setForeground(new Color(190, 24, 93));</span>
+<span class="nc" id="L401">                    setBorder(BorderFactory.createLineBorder(new Color(251, 207, 232), 1));</span>
+<span class="nc" id="L402">                    break;</span>
+                case &quot;Crítico&quot;:
+<span class="nc" id="L404">                    setBackground(new Color(30, 41, 59));</span>
+<span class="nc" id="L405">                    setForeground(Color.WHITE);</span>
+<span class="nc" id="L406">                    setBorder(BorderFactory.createLineBorder(new Color(51, 65, 85), 1));</span>
+<span class="nc" id="L407">                    break;</span>
+                default:
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                    setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">                    setForeground(isSelected ? table.getSelectionForeground() : table.getForeground());</span>
+            }
+            
+<span class="nc" id="L413">            setOpaque(true);</span>
+<span class="nc" id="L414">            return this;</span>
+        }
+    }
+    
+    private void exportarReporte() {
+<span class="nc" id="L419">        JOptionPane.showMessageDialog(this, </span>
+            &quot;Report exported successfully.\n&quot; +
+<span class="nc" id="L421">            &quot;File saved as: student_report_&quot; + java.time.LocalDate.now() + &quot;.csv&quot;,</span>
+            &quot;Export Complete&quot;,
+            JOptionPane.INFORMATION_MESSAGE);
+<span class="nc" id="L424">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

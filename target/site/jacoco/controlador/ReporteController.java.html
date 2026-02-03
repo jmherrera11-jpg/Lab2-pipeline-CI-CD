@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReporteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">ReporteController.java</span></div><h1>ReporteController.java</h1><pre class="source lang-java linenums">package controlador;
+
+import modelo.Asistencia;
+import modelo.Curso;
+import modelo.Estudiante;
+import util.MongoDBConnection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
+
+import java.util.*;
+
+public class ReporteController {
+    private AsistenciaController asistenciaController;
+    private CursoController cursoController;
+    private MongoCollection&lt;Document&gt; asistenciasCollection;
+    
+<span class="fc" id="L19">    public ReporteController() {</span>
+<span class="fc" id="L20">        this.asistenciaController = new AsistenciaController();</span>
+<span class="fc" id="L21">        this.cursoController = new CursoController();</span>
+        
+<span class="fc" id="L23">        MongoDatabase database = MongoDBConnection.getInstance().getDatabase();</span>
+<span class="fc" id="L24">        this.asistenciasCollection = database.getCollection(&quot;asistencias&quot;);</span>
+<span class="fc" id="L25">    }</span>
+    
+    public Map&lt;String, Object&gt; generarReporteGeneral() {
+<span class="fc" id="L28">        Map&lt;String, Object&gt; reporte = new HashMap&lt;&gt;();</span>
+        
+        // Estadísticas generales
+<span class="fc" id="L31">        List&lt;Estudiante&gt; estudiantes = asistenciaController.obtenerTodosEstudiantes();</span>
+<span class="fc" id="L32">        int totalEstudiantes = estudiantes.size();</span>
+        
+<span class="fc" id="L34">        int estudiantesActivos = (int) estudiantes.stream()</span>
+<span class="fc" id="L35">            .filter(e -&gt; &quot;active&quot;.equals(e.getStatus()))</span>
+<span class="fc" id="L36">            .count();</span>
+<span class="fc" id="L37">        int estudiantesInactivos = totalEstudiantes - estudiantesActivos;</span>
+        
+        // Calcular promedio de asistencia desde MongoDB
+<span class="fc" id="L40">        double promedioAsistencia = calcularPromedioAsistenciaGeneral();</span>
+        
+        // Identificar estudiantes en riesgo
+<span class="fc" id="L43">        List&lt;Map&lt;String, Object&gt;&gt; estudiantesRiesgo = identificarEstudiantesRiesgo();</span>
+        
+<span class="fc" id="L45">        reporte.put(&quot;totalEstudiantes&quot;, totalEstudiantes);</span>
+<span class="fc" id="L46">        reporte.put(&quot;estudiantesActivos&quot;, estudiantesActivos);</span>
+<span class="fc" id="L47">        reporte.put(&quot;estudiantesInactivos&quot;, estudiantesInactivos);</span>
+<span class="fc" id="L48">        reporte.put(&quot;promedioAsistencia&quot;, promedioAsistencia);</span>
+<span class="fc" id="L49">        reporte.put(&quot;estudiantesRiesgo&quot;, estudiantesRiesgo);</span>
+<span class="fc" id="L50">        reporte.put(&quot;totalCursos&quot;, cursoController.contarCursos());</span>
+        
+<span class="fc" id="L52">        return reporte;</span>
+    }
+    
+    public Map&lt;String, Object&gt; generarReporteCurso(String cursoId) {
+<span class="fc" id="L56">        Map&lt;String, Object&gt; reporte = new HashMap&lt;&gt;();</span>
+        
+<span class="fc" id="L58">        Curso curso = cursoController.obtenerCursoPorId(cursoId);</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (curso == null) {</span>
+<span class="nc" id="L60">            return null;</span>
+        }
+        
+        // Obtener estadísticas desde MongoDB usando agregaciones
+<span class="fc" id="L64">        Map&lt;String, String&gt; asistencias = asistenciaController.obtenerAsistenciaPorCurso(cursoId);</span>
+        
+        // Calcular estadísticas del curso
+<span class="fc" id="L67">        long totalRegistros = asistencias.size();</span>
+<span class="pc" id="L68">        long presentes = asistencias.values().stream().filter(v -&gt; &quot;present&quot;.equals(v)).count();</span>
+<span class="pc" id="L69">        long tardios = asistencias.values().stream().filter(v -&gt; &quot;late&quot;.equals(v)).count();</span>
+<span class="pc" id="L70">        long ausentes = asistencias.values().stream().filter(v -&gt; &quot;absent&quot;.equals(v)).count();</span>
+        
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        double tasaAsistencia = totalRegistros &gt; 0 ? (presentes * 100.0) / totalRegistros : 0.0;</span>
+        
+<span class="fc" id="L74">        reporte.put(&quot;curso&quot;, curso);</span>
+<span class="fc" id="L75">        reporte.put(&quot;totalRegistros&quot;, totalRegistros);</span>
+<span class="fc" id="L76">        reporte.put(&quot;presentes&quot;, presentes);</span>
+<span class="fc" id="L77">        reporte.put(&quot;tardios&quot;, tardios);</span>
+<span class="fc" id="L78">        reporte.put(&quot;ausentes&quot;, ausentes);</span>
+<span class="fc" id="L79">        reporte.put(&quot;tasaAsistencia&quot;, tasaAsistencia);</span>
+<span class="fc" id="L80">        reporte.put(&quot;fechaGeneracion&quot;, new Date());</span>
+        
+<span class="fc" id="L82">        return reporte;</span>
+    }
+    
+    public List&lt;Map&lt;String, Object&gt;&gt; generarReporteEstudiantes() {
+<span class="fc" id="L86">        List&lt;Map&lt;String, Object&gt;&gt; reporte = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L87">        List&lt;Estudiante&gt; estudiantes = asistenciaController.obtenerTodosEstudiantes();</span>
+        
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (Estudiante estudiante : estudiantes) {</span>
+<span class="fc" id="L90">            Map&lt;String, Object&gt; datos = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L91">            double porcentaje = asistenciaController.calcularPorcentajeAsistencia(estudiante.getId());</span>
+            
+<span class="fc" id="L93">            datos.put(&quot;estudiante&quot;, estudiante);</span>
+<span class="fc" id="L94">            datos.put(&quot;porcentajeAsistencia&quot;, porcentaje);</span>
+<span class="fc" id="L95">            datos.put(&quot;estado&quot;, determinarEstadoAsistencia(porcentaje));</span>
+            
+<span class="fc" id="L97">            reporte.add(datos);</span>
+        }
+        
+        // Ordenar por porcentaje de asistencia
+<span class="fc" id="L101">        reporte.sort(Comparator.comparingDouble(m -&gt; (Double) m.get(&quot;porcentajeAsistencia&quot;)));</span>
+        
+<span class="fc" id="L103">        return reporte;</span>
+    }
+    
+    private double calcularPromedioAsistenciaGeneral() {
+<span class="fc" id="L107">        List&lt;Estudiante&gt; estudiantes = asistenciaController.obtenerTodosEstudiantes();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (estudiantes.isEmpty()) return 0.0;</span>
+        
+<span class="fc" id="L110">        double suma = 0.0;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Estudiante estudiante : estudiantes) {</span>
+<span class="fc" id="L112">            suma += asistenciaController.calcularPorcentajeAsistencia(estudiante.getId());</span>
+        }
+        
+<span class="fc" id="L115">        return suma / estudiantes.size();</span>
+    }
+    
+    private List&lt;Map&lt;String, Object&gt;&gt; identificarEstudiantesRiesgo() {
+<span class="fc" id="L119">        List&lt;Map&lt;String, Object&gt;&gt; estudiantesRiesgo = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L120">        List&lt;Estudiante&gt; estudiantes = asistenciaController.obtenerTodosEstudiantes();</span>
+        
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (Estudiante estudiante : estudiantes) {</span>
+<span class="fc" id="L123">            double porcentaje = asistenciaController.calcularPorcentajeAsistencia(estudiante.getId());</span>
+            
+<span class="pc bpc" id="L125" title="1 of 4 branches missed.">            if (porcentaje &lt; 75.0 &amp;&amp; &quot;active&quot;.equals(estudiante.getStatus())) {</span>
+<span class="fc" id="L126">                Map&lt;String, Object&gt; datos = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L127">                datos.put(&quot;estudiante&quot;, estudiante);</span>
+<span class="fc" id="L128">                datos.put(&quot;porcentajeAsistencia&quot;, porcentaje);</span>
+<span class="fc" id="L129">                datos.put(&quot;cursosAfectados&quot;, obtenerCursosAfectados(estudiante.getId()));</span>
+                
+<span class="fc" id="L131">                estudiantesRiesgo.add(datos);</span>
+            }
+        }
+        
+<span class="fc" id="L135">        return estudiantesRiesgo;</span>
+    }
+    
+    private List&lt;String&gt; obtenerCursosAfectados(String estudianteId) {
+<span class="fc" id="L139">        List&lt;String&gt; cursos = new ArrayList&lt;&gt;();</span>
+        
+        // Consultar cursos únicos donde el estudiante tiene asistencia
+<span class="fc" id="L142">        Set&lt;String&gt; cursoIds = new HashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (Document doc : asistenciasCollection.find(</span>
+<span class="fc" id="L144">            Filters.eq(&quot;estudianteId&quot;, estudianteId)</span>
+        )) {
+<span class="fc" id="L146">            cursoIds.add(doc.getString(&quot;cursoId&quot;));</span>
+        }
+        
+        // Obtener códigos de cursos
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (String cursoId : cursoIds) {</span>
+<span class="fc" id="L151">            Curso curso = cursoController.obtenerCursoPorId(cursoId);</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (curso != null) {</span>
+<span class="nc" id="L153">                cursos.add(curso.getCodigo());</span>
+            }
+        }
+        
+<span class="fc" id="L157">        return cursos;</span>
+    }
+    
+    private String determinarEstadoAsistencia(double porcentaje) {
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (porcentaje &gt;= 90.0) return &quot;Excelente&quot;;</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (porcentaje &gt;= 80.0) return &quot;Bueno&quot;;</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (porcentaje &gt;= 70.0) return &quot;Regular&quot;;</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (porcentaje &gt;= 60.0) return &quot;Preocupante&quot;;</span>
+<span class="fc" id="L165">        return &quot;Crítico&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

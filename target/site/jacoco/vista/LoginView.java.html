@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">vista</a> &gt; <span class="el_source">LoginView.java</span></div><h1>LoginView.java</h1><pre class="source lang-java linenums">package vista;
+
+import controlador.AuthController;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class LoginView extends JFrame {
+    private AuthController authController;
+    
+<span class="nc" id="L11">    public LoginView(AuthController authController) {</span>
+<span class="nc" id="L12">        this.authController = authController;</span>
+<span class="nc" id="L13">        initUI();</span>
+<span class="nc" id="L14">    }</span>
+    
+    private void initUI() {
+<span class="nc" id="L17">        setTitle(&quot;Portal Académico - Inicio de Sesión&quot;);</span>
+<span class="nc" id="L18">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L19">        setSize(500, 600);</span>
+<span class="nc" id="L20">        setLocationRelativeTo(null);</span>
+        
+        // Panel principal
+<span class="nc" id="L23">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L24">        mainPanel.setBackground(new Color(248, 250, 252));</span>
+        
+        // Header
+<span class="nc" id="L27">        JPanel headerPanel = createHeaderPanel();</span>
+        
+        // Body con botones de roles
+<span class="nc" id="L30">        JPanel bodyPanel = createBodyPanel();</span>
+        
+<span class="nc" id="L32">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L33">        mainPanel.add(bodyPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L35">        add(mainPanel);</span>
+<span class="nc" id="L36">    }</span>
+    
+    private JPanel createHeaderPanel() {
+<span class="nc" id="L39">        JPanel headerPanel = new JPanel();</span>
+<span class="nc" id="L40">        headerPanel.setBackground(new Color(37, 99, 235));</span>
+<span class="nc" id="L41">        headerPanel.setPreferredSize(new Dimension(500, 180));</span>
+<span class="nc" id="L42">        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));</span>
+        
+        // Icono
+<span class="nc" id="L45">        JPanel iconPanel = new JPanel();</span>
+<span class="nc" id="L46">        iconPanel.setOpaque(false);</span>
+<span class="nc" id="L47">        iconPanel.setMaximumSize(new Dimension(80, 80));</span>
+<span class="nc" id="L48">        iconPanel.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 50), 2));</span>
+<span class="nc" id="L49">        iconPanel.setLayout(new GridBagLayout());</span>
+        
+<span class="nc" id="L51">        JLabel iconLabel = new JLabel(&quot;A&quot;);</span>
+<span class="nc" id="L52">        iconLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 32));</span>
+<span class="nc" id="L53">        iconLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L54">        iconPanel.add(iconLabel);</span>
+        
+        // Título
+<span class="nc" id="L57">        JLabel titleLabel = new JLabel(&quot;Portal Académico&quot;);</span>
+<span class="nc" id="L58">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L59">        titleLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L60">        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+        
+        // Subtítulo
+<span class="nc" id="L63">        JLabel subtitleLabel = new JLabel(&quot;Sistema de Control de Asistencia&quot;);</span>
+<span class="nc" id="L64">        subtitleLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 14));</span>
+<span class="nc" id="L65">        subtitleLabel.setForeground(new Color(191, 219, 254));</span>
+<span class="nc" id="L66">        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+        
+<span class="nc" id="L68">        headerPanel.add(Box.createVerticalStrut(30));</span>
+<span class="nc" id="L69">        headerPanel.add(iconPanel);</span>
+<span class="nc" id="L70">        headerPanel.add(Box.createVerticalStrut(10));</span>
+<span class="nc" id="L71">        headerPanel.add(titleLabel);</span>
+<span class="nc" id="L72">        headerPanel.add(Box.createVerticalStrut(5));</span>
+<span class="nc" id="L73">        headerPanel.add(subtitleLabel);</span>
+        
+<span class="nc" id="L75">        return headerPanel;</span>
+    }
+    
+    private JPanel createBodyPanel() {
+<span class="nc" id="L79">        JPanel bodyPanel = new JPanel();</span>
+<span class="nc" id="L80">        bodyPanel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L81">        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L82">        bodyPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));</span>
+        
+<span class="nc" id="L84">        JLabel selectLabel = new JLabel(&quot;Seleccione su rol para iniciar sesión&quot;);</span>
+<span class="nc" id="L85">        selectLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L86">        selectLabel.setForeground(new Color(71, 85, 105));</span>
+<span class="nc" id="L87">        selectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+        
+<span class="nc" id="L89">        bodyPanel.add(selectLabel);</span>
+<span class="nc" id="L90">        bodyPanel.add(Box.createVerticalStrut(30));</span>
+        
+        // Botones de roles
+<span class="nc" id="L93">        JButton profesorBtn = createRoleButton(&quot;Acceso Profesor&quot;, </span>
+            &quot;Registrar asistencia y ver cursos&quot;, new Color(59, 130, 246), &quot;profesor&quot;);
+        
+<span class="nc" id="L96">        JButton estudianteBtn = createRoleButton(&quot;Acceso Estudiante&quot;, </span>
+            &quot;Consultar estado de asistencia&quot;, new Color(34, 197, 94), &quot;estudiante&quot;);
+        
+<span class="nc" id="L99">        JButton coordinadorBtn = createRoleButton(&quot;Acceso Coordinador&quot;, </span>
+            &quot;Gestionar reportes y sistema&quot;, new Color(168, 85, 247), &quot;coordinador&quot;);
+        
+<span class="nc" id="L102">        bodyPanel.add(profesorBtn);</span>
+<span class="nc" id="L103">        bodyPanel.add(Box.createVerticalStrut(15));</span>
+<span class="nc" id="L104">        bodyPanel.add(estudianteBtn);</span>
+<span class="nc" id="L105">        bodyPanel.add(Box.createVerticalStrut(15));</span>
+<span class="nc" id="L106">        bodyPanel.add(coordinadorBtn);</span>
+<span class="nc" id="L107">        bodyPanel.add(Box.createVerticalStrut(40));</span>
+        
+        // Footer
+<span class="nc" id="L110">        JLabel footerLabel = new JLabel(&quot;Sistema Protegido • Solo Personal Autorizado&quot;);</span>
+<span class="nc" id="L111">        footerLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 11));</span>
+<span class="nc" id="L112">        footerLabel.setForeground(new Color(148, 163, 184));</span>
+<span class="nc" id="L113">        footerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L114">        bodyPanel.add(footerLabel);</span>
+        
+<span class="nc" id="L116">        return bodyPanel;</span>
+    }
+    
+    private JButton createRoleButton(String title, String description, Color color, String role) {
+<span class="nc" id="L120">        JButton button = new JButton();</span>
+<span class="nc" id="L121">        button.setLayout(new BorderLayout());</span>
+<span class="nc" id="L122">        button.setBackground(Color.WHITE);</span>
+<span class="nc" id="L123">        button.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L124">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L125">            BorderFactory.createEmptyBorder(15, 15, 15, 15)</span>
+        ));
+<span class="nc" id="L127">        button.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L128">        button.setMaximumSize(new Dimension(400, 80));</span>
+        
+        // Panel de contenido
+<span class="nc" id="L131">        JPanel contentPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L132">        contentPanel.setOpaque(false);</span>
+        
+        // Panel de icono
+<span class="nc" id="L135">        JPanel iconPanel = new JPanel();</span>
+<span class="nc" id="L136">        iconPanel.setPreferredSize(new Dimension(50, 50));</span>
+<span class="nc" id="L137">        iconPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 30));</span>
+<span class="nc" id="L138">        iconPanel.setBorder(BorderFactory.createLineBorder(</span>
+<span class="nc" id="L139">            new Color(color.getRed(), color.getGreen(), color.getBlue(), 50), 1));</span>
+<span class="nc" id="L140">        iconPanel.setLayout(new GridBagLayout());</span>
+        
+<span class="nc" id="L142">        JLabel iconLabel = new JLabel(role.substring(0, 1).toUpperCase());</span>
+<span class="nc" id="L143">        iconLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L144">        iconLabel.setForeground(color);</span>
+<span class="nc" id="L145">        iconPanel.add(iconLabel);</span>
+        
+        // Panel de texto
+<span class="nc" id="L148">        JPanel textPanel = new JPanel();</span>
+<span class="nc" id="L149">        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L150">        textPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L152">        JLabel titleLabel = new JLabel(title);</span>
+<span class="nc" id="L153">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L154">        titleLabel.setForeground(new Color(30, 41, 59));</span>
+        
+<span class="nc" id="L156">        JLabel descLabel = new JLabel(description);</span>
+<span class="nc" id="L157">        descLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 12));</span>
+<span class="nc" id="L158">        descLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L160">        textPanel.add(titleLabel);</span>
+<span class="nc" id="L161">        textPanel.add(Box.createVerticalStrut(2));</span>
+<span class="nc" id="L162">        textPanel.add(descLabel);</span>
+        
+        // Flecha
+<span class="nc" id="L165">        JLabel arrowLabel = new JLabel(&quot;&gt;&quot;);</span>
+<span class="nc" id="L166">        arrowLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L167">        arrowLabel.setForeground(new Color(203, 213, 225));</span>
+        
+<span class="nc" id="L169">        contentPanel.add(iconPanel, BorderLayout.WEST);</span>
+<span class="nc" id="L170">        contentPanel.add(textPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L171">        contentPanel.add(arrowLabel, BorderLayout.EAST);</span>
+        
+<span class="nc" id="L173">        button.add(contentPanel);</span>
+<span class="nc" id="L174">        button.addActionListener(e -&gt; handleLogin(role));</span>
+        
+<span class="nc" id="L176">        return button;</span>
+    }
+    
+    private void handleLogin(String role) {
+        // CORREGIR: Traducir los roles del español al inglés
+        String rolAuth;
+<span class="nc bnc" id="L182" title="All 4 branches missed.">        switch(role) {</span>
+            case &quot;profesor&quot;:
+<span class="nc" id="L184">                rolAuth = &quot;teacher&quot;;</span>
+<span class="nc" id="L185">                break;</span>
+            case &quot;estudiante&quot;:
+<span class="nc" id="L187">                rolAuth = &quot;student&quot;;  // ← Aquí está el problema</span>
+<span class="nc" id="L188">                break;</span>
+            case &quot;coordinador&quot;:
+<span class="nc" id="L190">                rolAuth = &quot;coordinator&quot;;</span>
+<span class="nc" id="L191">                break;</span>
+            default:
+<span class="nc" id="L193">                rolAuth = role;</span>
+        }
+        
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (authController.login(rolAuth)) {</span>
+<span class="nc" id="L197">            dispose();</span>
+<span class="nc" id="L198">            new DashboardView(authController).setVisible(true);</span>
+        } else {
+<span class="nc" id="L200">            JOptionPane.showMessageDialog(this, </span>
+                &quot;Error de autenticación. Rol '&quot; + role + &quot;' no encontrado.&quot;, 
+                &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);
+        }
+<span class="nc" id="L204">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

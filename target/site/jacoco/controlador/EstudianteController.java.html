@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EstudianteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">EstudianteController.java</span></div><h1>EstudianteController.java</h1><pre class="source lang-java linenums">
+package controlador;
+
+import modelo.Estudiante;
+import util.MongoDBConnection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EstudianteController {
+    private MongoCollection&lt;Document&gt; estudiantesCollection;
+    
+<span class="fc" id="L19">    public EstudianteController() {</span>
+<span class="fc" id="L20">        MongoDatabase database = MongoDBConnection.getInstance().getDatabase();</span>
+<span class="fc" id="L21">        this.estudiantesCollection = database.getCollection(&quot;estudiantes&quot;);</span>
+<span class="fc" id="L22">        inicializarDatosDemo();</span>
+<span class="fc" id="L23">    }</span>
+    
+    private void inicializarDatosDemo() {
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if (estudiantesCollection.countDocuments() == 0) {</span>
+<span class="nc" id="L27">            List&lt;Document&gt; estudiantesDemo = new ArrayList&lt;&gt;();</span>
+            
+<span class="nc" id="L29">            estudiantesDemo.add(new Document()</span>
+<span class="nc" id="L30">                .append(&quot;numeroEstudiante&quot;, &quot;2023001&quot;)</span>
+<span class="nc" id="L31">                .append(&quot;nombre&quot;, &quot;Juan Pérez&quot;)</span>
+<span class="nc" id="L32">                .append(&quot;email&quot;, &quot;juan@email.com&quot;)</span>
+<span class="nc" id="L33">                .append(&quot;status&quot;, &quot;active&quot;));</span>
+                
+<span class="nc" id="L35">            estudiantesDemo.add(new Document()</span>
+<span class="nc" id="L36">                .append(&quot;numeroEstudiante&quot;, &quot;2023002&quot;)</span>
+<span class="nc" id="L37">                .append(&quot;nombre&quot;, &quot;María García&quot;)</span>
+<span class="nc" id="L38">                .append(&quot;email&quot;, &quot;maria@email.com&quot;)</span>
+<span class="nc" id="L39">                .append(&quot;status&quot;, &quot;active&quot;));</span>
+                
+<span class="nc" id="L41">            estudiantesDemo.add(new Document()</span>
+<span class="nc" id="L42">                .append(&quot;numeroEstudiante&quot;, &quot;2023003&quot;)</span>
+<span class="nc" id="L43">                .append(&quot;nombre&quot;, &quot;Carlos López&quot;)</span>
+<span class="nc" id="L44">                .append(&quot;email&quot;, &quot;carlos@email.com&quot;)</span>
+<span class="nc" id="L45">                .append(&quot;status&quot;, &quot;active&quot;));</span>
+                
+<span class="nc" id="L47">            estudiantesDemo.add(new Document()</span>
+<span class="nc" id="L48">                .append(&quot;numeroEstudiante&quot;, &quot;2023004&quot;)</span>
+<span class="nc" id="L49">                .append(&quot;nombre&quot;, &quot;Ana Martínez&quot;)</span>
+<span class="nc" id="L50">                .append(&quot;email&quot;, &quot;ana@email.com&quot;)</span>
+<span class="nc" id="L51">                .append(&quot;status&quot;, &quot;active&quot;));</span>
+                
+<span class="nc" id="L53">            estudiantesCollection.insertMany(estudiantesDemo);</span>
+        }
+<span class="fc" id="L55">    }</span>
+    
+    // CREATE
+    public boolean crearEstudiante(String numeroEstudiante, String nombre, String email) {
+        // Verificar si ya existe el número de estudiante
+<span class="fc" id="L60">        Document estudianteExistente = estudiantesCollection.find(</span>
+<span class="fc" id="L61">            Filters.eq(&quot;numeroEstudiante&quot;, numeroEstudiante)</span>
+<span class="fc" id="L62">        ).first();</span>
+        
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (estudianteExistente != null) {</span>
+<span class="fc" id="L65">            return false;</span>
+        }
+        
+<span class="fc" id="L68">        Document nuevoEstudiante = new Document()</span>
+<span class="fc" id="L69">            .append(&quot;numeroEstudiante&quot;, numeroEstudiante)</span>
+<span class="fc" id="L70">            .append(&quot;nombre&quot;, nombre)</span>
+<span class="fc" id="L71">            .append(&quot;email&quot;, email)</span>
+<span class="fc" id="L72">            .append(&quot;status&quot;, &quot;active&quot;);</span>
+            
+<span class="fc" id="L74">        estudiantesCollection.insertOne(nuevoEstudiante);</span>
+<span class="fc" id="L75">        return true;</span>
+    }
+    
+    // READ
+    public List&lt;Estudiante&gt; obtenerTodosEstudiantes() {
+<span class="fc" id="L80">        List&lt;Estudiante&gt; estudiantes = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (Document doc : estudiantesCollection.find()) {</span>
+<span class="fc" id="L83">            estudiantes.add(documentToEstudiante(doc));</span>
+        }
+        
+<span class="fc" id="L86">        return estudiantes;</span>
+    }
+    
+    public Estudiante obtenerEstudiantePorId(String id) {
+        try {
+<span class="fc" id="L91">            Document doc = estudiantesCollection.find(</span>
+<span class="fc" id="L92">                Filters.eq(&quot;_id&quot;, new ObjectId(id))</span>
+<span class="fc" id="L93">            ).first();</span>
+            
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            return doc != null ? documentToEstudiante(doc) : null;</span>
+<span class="nc" id="L96">        } catch (Exception e) {</span>
+<span class="nc" id="L97">            return null;</span>
+        }
+    }
+    
+    public Estudiante obtenerEstudiantePorNumero(String numero) {
+<span class="fc" id="L102">        Document doc = estudiantesCollection.find(</span>
+<span class="fc" id="L103">            Filters.eq(&quot;numeroEstudiante&quot;, numero)</span>
+<span class="fc" id="L104">        ).first();</span>
+        
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        return doc != null ? documentToEstudiante(doc) : null;</span>
+    }
+    
+    // UPDATE
+    public boolean actualizarEstudiante(String id, String numeroEstudiante, String nombre, 
+                                       String email, String status) {
+        try {
+<span class="fc" id="L113">            ObjectId objectId = new ObjectId(id);</span>
+            
+            // Verificar si el nuevo número ya existe en otro estudiante
+<span class="fc" id="L116">            Estudiante estudianteActual = obtenerEstudiantePorId(id);</span>
+<span class="pc bpc" id="L117" title="2 of 4 branches missed.">            if (estudianteActual != null &amp;&amp; !estudianteActual.getNumeroEstudiante().equals(numeroEstudiante)) {</span>
+<span class="nc" id="L118">                Document estudianteConMismoNumero = estudiantesCollection.find(</span>
+<span class="nc" id="L119">                    Filters.and(</span>
+<span class="nc" id="L120">                        Filters.eq(&quot;numeroEstudiante&quot;, numeroEstudiante),</span>
+<span class="nc" id="L121">                        Filters.ne(&quot;_id&quot;, objectId)</span>
+                    )
+<span class="nc" id="L123">                ).first();</span>
+                
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                if (estudianteConMismoNumero != null) {</span>
+<span class="nc" id="L126">                    return false;</span>
+                }
+            }
+            
+<span class="fc" id="L130">            estudiantesCollection.updateOne(</span>
+<span class="fc" id="L131">                Filters.eq(&quot;_id&quot;, objectId),</span>
+<span class="fc" id="L132">                Updates.combine(</span>
+<span class="fc" id="L133">                    Updates.set(&quot;numeroEstudiante&quot;, numeroEstudiante),</span>
+<span class="fc" id="L134">                    Updates.set(&quot;nombre&quot;, nombre),</span>
+<span class="fc" id="L135">                    Updates.set(&quot;email&quot;, email),</span>
+<span class="fc" id="L136">                    Updates.set(&quot;status&quot;, status)</span>
+                )
+            );
+            
+<span class="fc" id="L140">            return true;</span>
+<span class="nc" id="L141">        } catch (Exception e) {</span>
+<span class="nc" id="L142">            return false;</span>
+        }
+    }
+    
+    // DELETE
+    public boolean eliminarEstudiante(String id) {
+        try {
+<span class="fc" id="L149">            estudiantesCollection.deleteOne(Filters.eq(&quot;_id&quot;, new ObjectId(id)));</span>
+<span class="fc" id="L150">            return true;</span>
+<span class="nc" id="L151">        } catch (Exception e) {</span>
+<span class="nc" id="L152">            return false;</span>
+        }
+    }
+    
+    // Métodos adicionales
+    public List&lt;Estudiante&gt; buscarEstudiantes(String criterio) {
+<span class="fc" id="L158">        List&lt;Estudiante&gt; resultados = new ArrayList&lt;&gt;();</span>
+        
+        // Buscar por múltiples campos usando OR
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (Document doc : estudiantesCollection.find(</span>
+<span class="fc" id="L162">            Filters.or(</span>
+<span class="fc" id="L163">                Filters.regex(&quot;nombre&quot;, &quot;.*&quot; + criterio + &quot;.*&quot;, &quot;i&quot;),</span>
+<span class="fc" id="L164">                Filters.regex(&quot;numeroEstudiante&quot;, &quot;.*&quot; + criterio + &quot;.*&quot;),</span>
+<span class="fc" id="L165">                Filters.regex(&quot;email&quot;, &quot;.*&quot; + criterio + &quot;.*&quot;, &quot;i&quot;)</span>
+            )
+        )) {
+<span class="fc" id="L168">            resultados.add(documentToEstudiante(doc));</span>
+        }
+        
+<span class="fc" id="L171">        return resultados;</span>
+    }
+    
+    public int contarEstudiantesActivos() {
+<span class="fc" id="L175">        return (int) estudiantesCollection.countDocuments(Filters.eq(&quot;status&quot;, &quot;active&quot;));</span>
+    }
+    
+    public int contarEstudiantesInactivos() {
+<span class="fc" id="L179">        return (int) estudiantesCollection.countDocuments(Filters.eq(&quot;status&quot;, &quot;inactive&quot;));</span>
+    }
+    
+    private Estudiante documentToEstudiante(Document doc) {
+<span class="fc" id="L183">        Estudiante estudiante = new Estudiante();</span>
+<span class="fc" id="L184">        estudiante.setId(doc.getObjectId(&quot;_id&quot;).toString());</span>
+<span class="fc" id="L185">        estudiante.setNumeroEstudiante(doc.getString(&quot;numeroEstudiante&quot;));</span>
+<span class="fc" id="L186">        estudiante.setNombre(doc.getString(&quot;nombre&quot;));</span>
+<span class="fc" id="L187">        estudiante.setEmail(doc.getString(&quot;email&quot;));</span>
+<span class="fc" id="L188">        estudiante.setStatus(doc.getString(&quot;status&quot;));</span>
+<span class="fc" id="L189">        return estudiante;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

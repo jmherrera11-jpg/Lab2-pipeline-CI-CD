@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">vista</a> &gt; <span class="el_source">DashboardView.java</span></div><h1>DashboardView.java</h1><pre class="source lang-java linenums">package vista;
+
+import controlador.AuthController;
+import controlador.CursoController;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class DashboardView extends JFrame {
+    private AuthController authController;
+    private CursoController cursoController;
+    
+<span class="nc" id="L13">    public DashboardView(AuthController authController) {</span>
+<span class="nc" id="L14">        this.authController = authController;</span>
+<span class="nc" id="L15">        this.cursoController = new CursoController();</span>
+<span class="nc" id="L16">        initUI();</span>
+<span class="nc" id="L17">    }</span>
+    
+    private void initUI() {
+<span class="nc" id="L20">        setTitle(&quot;Academic Dashboard - &quot; + authController.getRolActual().toUpperCase());</span>
+<span class="nc" id="L21">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L22">        setSize(1200, 800);</span>
+<span class="nc" id="L23">        setLocationRelativeTo(null);</span>
+        
+<span class="nc" id="L25">        String rol = authController.getRolActual();</span>
+        
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        switch (rol) {</span>
+            case &quot;teacher&quot;:
+<span class="nc" id="L29">                mostrarDashboardTeacher();</span>
+<span class="nc" id="L30">                break;</span>
+            case &quot;student&quot;:
+<span class="nc" id="L32">                mostrarDashboardStudent();</span>
+<span class="nc" id="L33">                break;</span>
+            case &quot;coordinator&quot;:
+<span class="nc" id="L35">                mostrarDashboardCoordinator();</span>
+<span class="nc" id="L36">                break;</span>
+            default:
+<span class="nc" id="L38">                JOptionPane.showMessageDialog(this, &quot;Rol no reconocido: &quot; + rol);</span>
+                break;
+        }
+<span class="nc" id="L41">    }</span>
+    
+    private void mostrarDashboardTeacher() {
+<span class="nc" id="L44">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L45">        mainPanel.setBackground(new Color(248, 250, 252));</span>
+        
+        // Header con logout
+<span class="nc" id="L48">        JPanel headerPanel = createHeaderPanel(&quot;Teacher Dashboard&quot;, </span>
+<span class="nc" id="L49">            &quot;Welcome back, Prof. Anderson. Select a course to manage attendance.&quot;);</span>
+        
+        // Courses Grid
+<span class="nc" id="L52">        JPanel coursesPanel = new JPanel(new GridLayout(0, 3, 20, 20));</span>
+<span class="nc" id="L53">        coursesPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));</span>
+<span class="nc" id="L54">        coursesPanel.setBackground(new Color(248, 250, 252));</span>
+        
+<span class="nc" id="L56">        cursoController.obtenerTodosCursos().forEach(curso -&gt; {</span>
+<span class="nc" id="L57">            JPanel courseCard = createCourseCard(curso);</span>
+<span class="nc" id="L58">            coursesPanel.add(courseCard);</span>
+<span class="nc" id="L59">        });</span>
+        
+<span class="nc" id="L61">        JScrollPane scrollPane = new JScrollPane(coursesPanel);</span>
+<span class="nc" id="L62">        scrollPane.setBorder(null);</span>
+        
+<span class="nc" id="L64">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L65">        mainPanel.add(scrollPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L67">        add(mainPanel);</span>
+<span class="nc" id="L68">    }</span>
+    
+    private JPanel createHeaderPanel(String title, String subtitle) {
+<span class="nc" id="L71">        JPanel headerPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L72">        headerPanel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L73">        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));</span>
+<span class="nc" id="L74">        headerPanel.setPreferredSize(new Dimension(1200, 100));</span>
+        
+        // Panel izquierdo con título
+<span class="nc" id="L77">        JPanel leftPanel = new JPanel(new GridLayout(2, 1, 0, 5));</span>
+<span class="nc" id="L78">        leftPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L80">        JLabel welcomeLabel = new JLabel(title);</span>
+<span class="nc" id="L81">        welcomeLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L82">        welcomeLabel.setForeground(new Color(30, 41, 59));</span>
+        
+<span class="nc" id="L84">        JLabel subtitleLabel = new JLabel(subtitle);</span>
+<span class="nc" id="L85">        subtitleLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 14));</span>
+<span class="nc" id="L86">        subtitleLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L88">        leftPanel.add(welcomeLabel);</span>
+<span class="nc" id="L89">        leftPanel.add(subtitleLabel);</span>
+        
+        // Panel derecho con fecha y logout
+<span class="nc" id="L92">        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));</span>
+<span class="nc" id="L93">        rightPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L95">        JLabel dateLabel = new JLabel(java.time.LocalDate.now().toString());</span>
+<span class="nc" id="L96">        dateLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L97">        dateLabel.setForeground(new Color(37, 99, 235));</span>
+<span class="nc" id="L98">        dateLabel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L99">            BorderFactory.createLineBorder(new Color(191, 219, 254), 1),</span>
+<span class="nc" id="L100">            BorderFactory.createEmptyBorder(10, 15, 10, 15)</span>
+        ));
+<span class="nc" id="L102">        dateLabel.setBackground(new Color(239, 246, 255));</span>
+<span class="nc" id="L103">        dateLabel.setOpaque(true);</span>
+        
+        // Botón de logout
+<span class="nc" id="L106">        JButton logoutButton = new JButton(&quot;Logout&quot;);</span>
+<span class="nc" id="L107">        logoutButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L108">        logoutButton.setBackground(new Color(239, 68, 68));</span>
+<span class="nc" id="L109">        logoutButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L110">        logoutButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));</span>
+<span class="nc" id="L111">        logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+<span class="nc" id="L112">        logoutButton.addActionListener(this::handleLogout);</span>
+        
+<span class="nc" id="L114">        rightPanel.add(dateLabel);</span>
+<span class="nc" id="L115">        rightPanel.add(logoutButton);</span>
+        
+<span class="nc" id="L117">        headerPanel.add(leftPanel, BorderLayout.WEST);</span>
+<span class="nc" id="L118">        headerPanel.add(rightPanel, BorderLayout.EAST);</span>
+        
+<span class="nc" id="L120">        return headerPanel;</span>
+    }
+    
+    private JPanel createCourseCard(modelo.Curso curso) {
+<span class="nc" id="L124">        JPanel card = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L125">        card.setBackground(Color.WHITE);</span>
+<span class="nc" id="L126">        card.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L127">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L128">            BorderFactory.createEmptyBorder(20, 20, 20, 20)</span>
+        ));
+<span class="nc" id="L130">        card.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+        
+        // Top bar
+<span class="nc" id="L133">        JPanel topBar = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L134">        topBar.setOpaque(false);</span>
+        
+<span class="nc" id="L136">        JLabel codeLabel = new JLabel(curso.getCodigo());</span>
+<span class="nc" id="L137">        codeLabel.setFont(new Font(&quot;Monospaced&quot;, Font.BOLD, 11));</span>
+<span class="nc" id="L138">        codeLabel.setForeground(new Color(71, 85, 105));</span>
+<span class="nc" id="L139">        codeLabel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L140">            BorderFactory.createLineBorder(new Color(241, 245, 249), 1),</span>
+<span class="nc" id="L141">            BorderFactory.createEmptyBorder(3, 8, 3, 8)</span>
+        ));
+<span class="nc" id="L143">        codeLabel.setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L144">        codeLabel.setOpaque(true);</span>
+        
+<span class="nc" id="L146">        JLabel arrowLabel = new JLabel(&quot;&gt;&quot;);</span>
+<span class="nc" id="L147">        arrowLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L148">        arrowLabel.setForeground(new Color(203, 213, 225));</span>
+        
+<span class="nc" id="L150">        topBar.add(codeLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L151">        topBar.add(arrowLabel, BorderLayout.EAST);</span>
+        
+        // Course name
+<span class="nc" id="L154">        JLabel nameLabel = new JLabel(curso.getNombre());</span>
+<span class="nc" id="L155">        nameLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L156">        nameLabel.setForeground(new Color(30, 41, 59));</span>
+        
+        // Details
+<span class="nc" id="L159">        JPanel detailsPanel = new JPanel();</span>
+<span class="nc" id="L160">        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L161">        detailsPanel.setOpaque(false);</span>
+<span class="nc" id="L162">        detailsPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));</span>
+        
+<span class="nc" id="L164">        addDetail(detailsPanel, &quot;Schedule: &quot; + curso.getHorario());</span>
+<span class="nc" id="L165">        addDetail(detailsPanel, &quot;Room: &quot; + curso.getAula());</span>
+<span class="nc" id="L166">        addDetail(detailsPanel, &quot;Students: 32 Enrolled&quot;);</span>
+        
+        // Footer
+<span class="nc" id="L169">        JPanel footerPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L170">        footerPanel.setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L171">        footerPanel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L172">            BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(241, 245, 249)),</span>
+<span class="nc" id="L173">            BorderFactory.createEmptyBorder(10, 0, 0, 0)</span>
+        ));
+        
+<span class="nc" id="L176">        JLabel nextLabel = new JLabel(&quot;Next Session&quot;);</span>
+<span class="nc" id="L177">        nextLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 10));</span>
+<span class="nc" id="L178">        nextLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L180">        JLabel timeLabel = new JLabel(&quot;Today, 09:00 AM&quot;);</span>
+<span class="nc" id="L181">        timeLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L182">        timeLabel.setForeground(new Color(30, 41, 59));</span>
+        
+<span class="nc" id="L184">        footerPanel.add(nextLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L185">        footerPanel.add(timeLabel, BorderLayout.EAST);</span>
+        
+<span class="nc" id="L187">        card.add(topBar, BorderLayout.NORTH);</span>
+<span class="nc" id="L188">        card.add(nameLabel, BorderLayout.CENTER);</span>
+<span class="nc" id="L189">        card.add(detailsPanel, BorderLayout.SOUTH);</span>
+<span class="nc" id="L190">        card.add(footerPanel, BorderLayout.AFTER_LAST_LINE);</span>
+        
+<span class="nc" id="L192">        card.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L194">                new AttendanceRegisterView(curso, authController).setVisible(true);</span>
+<span class="nc" id="L195">            }</span>
+        });
+        
+<span class="nc" id="L198">        return card;</span>
+    }
+    
+    private void addDetail(JPanel panel, String text) {
+<span class="nc" id="L202">        JPanel detailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));</span>
+<span class="nc" id="L203">        detailPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L205">        JLabel textLabel = new JLabel(text);</span>
+<span class="nc" id="L206">        textLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
+<span class="nc" id="L207">        textLabel.setForeground(new Color(71, 85, 105));</span>
+        
+<span class="nc" id="L209">        detailPanel.add(textLabel);</span>
+<span class="nc" id="L210">        panel.add(detailPanel);</span>
+<span class="nc" id="L211">    }</span>
+    
+    private void mostrarDashboardStudent() {
+<span class="nc" id="L214">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L215">        mainPanel.setBackground(new Color(248, 250, 252));</span>
+        
+        // Header con logout
+<span class="nc" id="L218">        JPanel headerPanel = createHeaderPanel(&quot;Student Dashboard&quot;, </span>
+<span class="nc" id="L219">            &quot;Overview of your academic attendance performance.&quot;);</span>
+        
+        // Panel de estadísticas
+<span class="nc" id="L222">        JPanel statsPanel = createStudentStatsPanel();</span>
+        
+        // Panel de actividad reciente
+<span class="nc" id="L225">        JPanel activityPanel = createStudentActivityPanel();</span>
+        
+<span class="nc" id="L227">        JPanel contentPanel = new JPanel(new BorderLayout(0, 20));</span>
+<span class="nc" id="L228">        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));</span>
+<span class="nc" id="L229">        contentPanel.setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L230">        contentPanel.add(statsPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L231">        contentPanel.add(activityPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L233">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L234">        mainPanel.add(contentPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L236">        add(mainPanel);</span>
+<span class="nc" id="L237">    }</span>
+    
+    private JPanel createStudentStatsPanel() {
+<span class="nc" id="L240">        JPanel statsPanel = new JPanel(new GridLayout(1, 3, 15, 15));</span>
+<span class="nc" id="L241">        statsPanel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L242">        statsPanel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L243">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L244">            BorderFactory.createEmptyBorder(20, 20, 20, 20)</span>
+        ));
+        
+        // Present stat
+<span class="nc" id="L248">        JPanel presentPanel = createStatCard(&quot;Present&quot;, &quot;85%&quot;, new Color(34, 197, 94));</span>
+        
+        // Late stat
+<span class="nc" id="L251">        JPanel latePanel = createStatCard(&quot;Late&quot;, &quot;10%&quot;, new Color(245, 158, 11));</span>
+        
+        // Absent stat
+<span class="nc" id="L254">        JPanel absentPanel = createStatCard(&quot;Absent&quot;, &quot;5%&quot;, new Color(239, 68, 68));</span>
+        
+<span class="nc" id="L256">        statsPanel.add(presentPanel);</span>
+<span class="nc" id="L257">        statsPanel.add(latePanel);</span>
+<span class="nc" id="L258">        statsPanel.add(absentPanel);</span>
+        
+<span class="nc" id="L260">        return statsPanel;</span>
+    }
+    
+    private JPanel createStatCard(String title, String value, Color color) {
+<span class="nc" id="L264">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L265">        panel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 20));</span>
+<span class="nc" id="L266">        panel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L267">            BorderFactory.createLineBorder(new Color(color.getRed(), color.getGreen(), color.getBlue(), 50), 1),</span>
+<span class="nc" id="L268">            BorderFactory.createEmptyBorder(15, 15, 15, 15)</span>
+        ));
+        
+<span class="nc" id="L271">        JPanel leftPanel = new JPanel();</span>
+<span class="nc" id="L272">        leftPanel.setOpaque(false);</span>
+<span class="nc" id="L273">        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));</span>
+        
+<span class="nc" id="L275">        JLabel titleLabel = new JLabel(title);</span>
+<span class="nc" id="L276">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L277">        titleLabel.setForeground(color);</span>
+        
+<span class="nc" id="L279">        JLabel valueLabel = new JLabel(value);</span>
+<span class="nc" id="L280">        valueLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L281">        valueLabel.setForeground(darkenColor(color, 0.3f));</span>
+        
+<span class="nc" id="L283">        leftPanel.add(titleLabel);</span>
+<span class="nc" id="L284">        leftPanel.add(Box.createVerticalStrut(5));</span>
+<span class="nc" id="L285">        leftPanel.add(valueLabel);</span>
+        
+<span class="nc" id="L287">        panel.add(leftPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L289">        return panel;</span>
+    }
+    
+    private Color darkenColor(Color color, float factor) {
+<span class="nc" id="L293">        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);</span>
+<span class="nc" id="L294">        return Color.getHSBColor(hsb[0], hsb[1], hsb[2] * factor);</span>
+    }
+    
+    private JPanel createStudentActivityPanel() {
+<span class="nc" id="L298">        JPanel panel = new JPanel(new BorderLayout());</span>
+        
+<span class="nc" id="L300">        JLabel titleLabel = new JLabel(&quot;Recent Activity&quot;);</span>
+<span class="nc" id="L301">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L302">        titleLabel.setForeground(new Color(30, 41, 59));</span>
+        
+        // Tabla de actividad
+<span class="nc" id="L305">        String[] columnNames = {&quot;Date&quot;, &quot;Course&quot;, &quot;Status&quot;};</span>
+<span class="nc" id="L306">        Object[][] data = {</span>
+<span class="nc" id="L307">            {&quot;2024-03-10&quot;, &quot;Database Systems&quot;, &quot;present&quot;},</span>
+<span class="nc" id="L308">            {&quot;2024-03-09&quot;, &quot;Calculus I&quot;, &quot;late&quot;},</span>
+<span class="nc" id="L309">            {&quot;2024-03-08&quot;, &quot;Intro to CS&quot;, &quot;present&quot;},</span>
+<span class="nc" id="L310">            {&quot;2024-03-05&quot;, &quot;Database Systems&quot;, &quot;absent&quot;}</span>
+        };
+        
+<span class="nc" id="L313">        JTable table = new JTable(data, columnNames);</span>
+<span class="nc" id="L314">        table.setRowHeight(40);</span>
+<span class="nc" id="L315">        table.getTableHeader().setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L316">        table.getTableHeader().setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L317">        table.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
+        
+<span class="nc" id="L319">        JScrollPane scrollPane = new JScrollPane(table);</span>
+<span class="nc" id="L320">        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));</span>
+        
+<span class="nc" id="L322">        panel.add(titleLabel, BorderLayout.NORTH);</span>
+<span class="nc" id="L323">        panel.add(scrollPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L325">        return panel;</span>
+    }
+    
+    private void mostrarDashboardCoordinator() {
+<span class="nc" id="L329">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L330">        mainPanel.setBackground(new Color(248, 250, 252));</span>
+        
+        // Header con logout
+<span class="nc" id="L333">        JPanel headerPanel = createHeaderPanel(&quot;Academic Coordinator Dashboard&quot;, </span>
+<span class="nc" id="L334">            &quot;System overview and attendance reporting.&quot;);</span>
+        
+        // Panel de estadísticas
+<span class="nc" id="L337">        JPanel statsPanel = createCoordinatorStatsPanel();</span>
+        
+        // Panel de cursos
+<span class="nc" id="L340">        JPanel coursesPanel = createCoordinatorCoursesPanel();</span>
+        
+        // Panel de botones de acción
+<span class="nc" id="L343">        JPanel actionPanel = createCoordinatorActionPanel();</span>
+        
+<span class="nc" id="L345">        JPanel contentPanel = new JPanel();</span>
+<span class="nc" id="L346">        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L347">        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));</span>
+<span class="nc" id="L348">        contentPanel.setBackground(new Color(248, 250, 252));</span>
+        
+<span class="nc" id="L350">        contentPanel.add(statsPanel);</span>
+<span class="nc" id="L351">        contentPanel.add(Box.createVerticalStrut(20));</span>
+<span class="nc" id="L352">        contentPanel.add(coursesPanel);</span>
+<span class="nc" id="L353">        contentPanel.add(Box.createVerticalStrut(20));</span>
+<span class="nc" id="L354">        contentPanel.add(actionPanel);</span>
+        
+<span class="nc" id="L356">        JScrollPane scrollPane = new JScrollPane(contentPanel);</span>
+<span class="nc" id="L357">        scrollPane.setBorder(null);</span>
+        
+<span class="nc" id="L359">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+<span class="nc" id="L360">        mainPanel.add(scrollPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L362">        add(mainPanel);</span>
+<span class="nc" id="L363">    }</span>
+
+    private JPanel createCoordinatorActionPanel() {
+<span class="nc" id="L366">        JPanel panel = new JPanel(new GridLayout(2, 2, 15, 15)); // Cambiado a 2x2</span>
+<span class="nc" id="L367">        panel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L368">        panel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L369">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L370">            BorderFactory.createEmptyBorder(20, 20, 20, 20)</span>
+        ));
+        
+        // Botón de generar reportes
+<span class="nc" id="L374">        JButton reportsButton = createActionButton(&quot;View Reports&quot;, </span>
+<span class="nc" id="L375">            &quot;Generate and view attendance reports&quot;, new Color(59, 130, 246));</span>
+<span class="nc" id="L376">        reportsButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L377">            new CoordinatorReportView(authController).setVisible(true);</span>
+<span class="nc" id="L378">        });</span>
+        
+        // Botón de gestionar cursos
+<span class="nc" id="L381">        JButton manageCoursesButton = createActionButton(&quot;Manage Courses&quot;, </span>
+<span class="nc" id="L382">            &quot;Add, edit or remove courses&quot;, new Color(168, 85, 247));</span>
+<span class="nc" id="L383">        manageCoursesButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L384">            new GestionCursosView(authController).setVisible(true);</span>
+<span class="nc" id="L385">        });</span>
+        
+        // Botón de gestionar estudiantes
+<span class="nc" id="L388">        JButton manageStudentsButton = createActionButton(&quot;Manage Students&quot;, </span>
+<span class="nc" id="L389">            &quot;Add, edit or remove students&quot;, new Color(34, 197, 94));</span>
+<span class="nc" id="L390">        manageStudentsButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L391">            new GestionEstudiantesView(authController).setVisible(true);</span>
+<span class="nc" id="L392">        });</span>
+        
+        // NUEVO BOTÓN: Gestionar profesores
+<span class="nc" id="L395">        JButton manageTeachersButton = createActionButton(&quot;Manage Teachers&quot;, </span>
+<span class="nc" id="L396">            &quot;Add, edit or remove teachers&quot;, new Color(245, 158, 11)); // Color naranja</span>
+<span class="nc" id="L397">        manageTeachersButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L398">            new GestionProfesoresView(authController).setVisible(true);</span>
+<span class="nc" id="L399">        });</span>
+        
+<span class="nc" id="L401">        panel.add(reportsButton);</span>
+<span class="nc" id="L402">        panel.add(manageCoursesButton);</span>
+<span class="nc" id="L403">        panel.add(manageStudentsButton);</span>
+<span class="nc" id="L404">        panel.add(manageTeachersButton);</span>
+        
+<span class="nc" id="L406">        return panel;</span>
+    }
+
+    private JButton createActionButton(String title, String description, Color color) {
+<span class="nc" id="L410">        JButton button = new JButton();</span>
+<span class="nc" id="L411">        button.setLayout(new BorderLayout());</span>
+<span class="nc" id="L412">        button.setBackground(Color.WHITE);</span>
+<span class="nc" id="L413">        button.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L414">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L415">            BorderFactory.createEmptyBorder(20, 20, 20, 20)</span>
+        ));
+<span class="nc" id="L417">        button.setCursor(new Cursor(Cursor.HAND_CURSOR));</span>
+        
+<span class="nc" id="L419">        JPanel contentPanel = new JPanel();</span>
+<span class="nc" id="L420">        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L421">        contentPanel.setOpaque(false);</span>
+        
+        // Icon panel
+<span class="nc" id="L424">        JPanel iconPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L425">        iconPanel.setPreferredSize(new Dimension(40, 40));</span>
+<span class="nc" id="L426">        iconPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 20));</span>
+<span class="nc" id="L427">        iconPanel.setBorder(BorderFactory.createLineBorder(</span>
+<span class="nc" id="L428">            new Color(color.getRed(), color.getGreen(), color.getBlue(), 50), 1));</span>
+        
+<span class="nc" id="L430">        JLabel iconLabel = new JLabel(title.substring(0, 1));</span>
+<span class="nc" id="L431">        iconLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L432">        iconLabel.setForeground(color);</span>
+<span class="nc" id="L433">        iconPanel.add(iconLabel);</span>
+        
+        // Text panel
+<span class="nc" id="L436">        JPanel textPanel = new JPanel();</span>
+<span class="nc" id="L437">        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L438">        textPanel.setOpaque(false);</span>
+<span class="nc" id="L439">        textPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));</span>
+        
+<span class="nc" id="L441">        JLabel titleLabel = new JLabel(title);</span>
+<span class="nc" id="L442">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L443">        titleLabel.setForeground(new Color(30, 41, 59));</span>
+        
+<span class="nc" id="L445">        JLabel descLabel = new JLabel(&quot;&lt;html&gt;&lt;div style='width: 200px'&gt;&quot; + description + &quot;&lt;/div&gt;&lt;/html&gt;&quot;);</span>
+<span class="nc" id="L446">        descLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 12));</span>
+<span class="nc" id="L447">        descLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L449">        textPanel.add(titleLabel);</span>
+<span class="nc" id="L450">        textPanel.add(Box.createVerticalStrut(5));</span>
+<span class="nc" id="L451">        textPanel.add(descLabel);</span>
+        
+        // Arrow
+<span class="nc" id="L454">        JLabel arrowLabel = new JLabel(&quot;&gt;&quot;);</span>
+<span class="nc" id="L455">        arrowLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 20));</span>
+<span class="nc" id="L456">        arrowLabel.setForeground(new Color(203, 213, 225));</span>
+<span class="nc" id="L457">        arrowLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));</span>
+        
+<span class="nc" id="L459">        contentPanel.add(iconPanel);</span>
+<span class="nc" id="L460">        contentPanel.add(textPanel);</span>
+        
+<span class="nc" id="L462">        button.add(contentPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L463">        button.add(arrowLabel, BorderLayout.EAST);</span>
+        
+<span class="nc" id="L465">        return button;</span>
+    }
+    
+    private JPanel createCoordinatorStatsPanel() {
+<span class="nc" id="L469">        JPanel statsPanel = new JPanel(new GridLayout(1, 3, 15, 15));</span>
+        
+        // Total Students
+<span class="nc" id="L472">        JPanel studentsPanel = createMetricCard(&quot;Total Students&quot;, &quot;142&quot;, </span>
+<span class="nc" id="L473">            new Color(59, 130, 246), &quot;Students&quot;);</span>
+        
+        // Average Attendance
+<span class="nc" id="L476">        JPanel attendancePanel = createMetricCard(&quot;Avg Attendance&quot;, &quot;88.4%&quot;, </span>
+<span class="nc" id="L477">            new Color(168, 85, 247), &quot;Overall&quot;);</span>
+        
+        // At Risk
+<span class="nc" id="L480">        JPanel riskPanel = createMetricCard(&quot;At Risk&quot;, &quot;3&quot;, </span>
+<span class="nc" id="L481">            new Color(245, 158, 11), &quot;Students&quot;);</span>
+        
+<span class="nc" id="L483">        statsPanel.add(studentsPanel);</span>
+<span class="nc" id="L484">        statsPanel.add(attendancePanel);</span>
+<span class="nc" id="L485">        statsPanel.add(riskPanel);</span>
+        
+<span class="nc" id="L487">        return statsPanel;</span>
+    }
+    
+    private JPanel createMetricCard(String title, String value, Color color, String unit) {
+<span class="nc" id="L491">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L492">        panel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L493">        panel.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L494">            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
+<span class="nc" id="L495">            BorderFactory.createEmptyBorder(20, 20, 20, 20)</span>
+        ));
+        
+<span class="nc" id="L498">        JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));</span>
+<span class="nc" id="L499">        contentPanel.setOpaque(false);</span>
+        
+        // Icon panel
+<span class="nc" id="L502">        JPanel iconPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L503">        iconPanel.setPreferredSize(new Dimension(50, 50));</span>
+<span class="nc" id="L504">        iconPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 20));</span>
+<span class="nc" id="L505">        iconPanel.setBorder(BorderFactory.createLineBorder(</span>
+<span class="nc" id="L506">            new Color(color.getRed(), color.getGreen(), color.getBlue(), 50), 1));</span>
+        
+<span class="nc" id="L508">        JLabel iconLabel = new JLabel(title.substring(0, 1));</span>
+<span class="nc" id="L509">        iconLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L510">        iconLabel.setForeground(color);</span>
+<span class="nc" id="L511">        iconPanel.add(iconLabel);</span>
+        
+        // Text panel
+<span class="nc" id="L514">        JPanel textPanel = new JPanel();</span>
+<span class="nc" id="L515">        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L516">        textPanel.setOpaque(false);</span>
+        
+<span class="nc" id="L518">        JLabel titleLabel = new JLabel(title);</span>
+<span class="nc" id="L519">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L520">        titleLabel.setForeground(new Color(100, 116, 139));</span>
+        
+<span class="nc" id="L522">        JPanel valuePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));</span>
+<span class="nc" id="L523">        valuePanel.setOpaque(false);</span>
+        
+<span class="nc" id="L525">        JLabel valueLabel = new JLabel(value);</span>
+<span class="nc" id="L526">        valueLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L527">        valueLabel.setForeground(new Color(30, 41, 59));</span>
+        
+<span class="nc" id="L529">        JLabel unitLabel = new JLabel(&quot; &quot; + unit);</span>
+<span class="nc" id="L530">        unitLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 12));</span>
+<span class="nc" id="L531">        unitLabel.setForeground(new Color(148, 163, 184));</span>
+        
+<span class="nc" id="L533">        valuePanel.add(valueLabel);</span>
+<span class="nc" id="L534">        valuePanel.add(unitLabel);</span>
+        
+<span class="nc" id="L536">        textPanel.add(titleLabel);</span>
+<span class="nc" id="L537">        textPanel.add(Box.createVerticalStrut(5));</span>
+<span class="nc" id="L538">        textPanel.add(valuePanel);</span>
+        
+<span class="nc" id="L540">        contentPanel.add(iconPanel);</span>
+<span class="nc" id="L541">        contentPanel.add(textPanel);</span>
+        
+<span class="nc" id="L543">        panel.add(contentPanel, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L545">        return panel;</span>
+    }
+    
+    private JPanel createCoordinatorCoursesPanel() {
+<span class="nc" id="L549">        JPanel panel = new JPanel(new BorderLayout());</span>
+        
+<span class="nc" id="L551">        JLabel titleLabel = new JLabel(&quot;Course Overview&quot;);</span>
+<span class="nc" id="L552">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L553">        titleLabel.setForeground(new Color(30, 41, 59));</span>
+<span class="nc" id="L554">        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));</span>
+        
+        // Tabla de cursos
+<span class="nc" id="L557">        String[] columnNames = {&quot;Course Code&quot;, &quot;Course Name&quot;, &quot;Schedule&quot;, &quot;Attendance Rate&quot;};</span>
+<span class="nc" id="L558">        Object[][] data = {</span>
+<span class="nc" id="L559">            {&quot;CS101&quot;, &quot;Database Systems&quot;, &quot;Mon/Wed 9:00-10:30&quot;, &quot;92%&quot;},</span>
+<span class="nc" id="L560">            {&quot;CS102&quot;, &quot;Calculus I&quot;, &quot;Tue/Thu 11:00-12:30&quot;, &quot;88%&quot;},</span>
+<span class="nc" id="L561">            {&quot;CS103&quot;, &quot;Intro to CS&quot;, &quot;Mon/Fri 14:00-15:30&quot;, &quot;95%&quot;}</span>
+        };
+        
+<span class="nc" id="L564">        JTable table = new JTable(data, columnNames);</span>
+<span class="nc" id="L565">        table.setRowHeight(50);</span>
+<span class="nc" id="L566">        table.getTableHeader().setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+<span class="nc" id="L567">        table.getTableHeader().setBackground(new Color(248, 250, 252));</span>
+<span class="nc" id="L568">        table.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
+        
+        // Personalizar columna de attendance rate
+<span class="nc" id="L571">        table.getColumnModel().getColumn(3).setCellRenderer(new AttendanceRateRenderer());</span>
+        
+<span class="nc" id="L573">        JScrollPane scrollPane = new JScrollPane(table);</span>
+<span class="nc" id="L574">        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));</span>
+        
+<span class="nc" id="L576">        panel.add(titleLabel, BorderLayout.NORTH);</span>
+<span class="nc" id="L577">        panel.add(scrollPane, BorderLayout.CENTER);</span>
+        
+<span class="nc" id="L579">        return panel;</span>
+    }
+    
+    private class AttendanceRateRenderer extends JPanel implements javax.swing.table.TableCellRenderer {
+        private JLabel percentageLabel;
+        private JProgressBar progressBar;
+        
+<span class="nc" id="L586">        public AttendanceRateRenderer() {</span>
+<span class="nc" id="L587">            setLayout(new BorderLayout(10, 0));</span>
+<span class="nc" id="L588">            setOpaque(true);</span>
+            
+<span class="nc" id="L590">            percentageLabel = new JLabel();</span>
+<span class="nc" id="L591">            percentageLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 12));</span>
+            
+<span class="nc" id="L593">            progressBar = new JProgressBar(0, 100);</span>
+<span class="nc" id="L594">            progressBar.setPreferredSize(new Dimension(100, 8));</span>
+<span class="nc" id="L595">            progressBar.setBorderPainted(false);</span>
+<span class="nc" id="L596">            progressBar.setStringPainted(false);</span>
+            
+<span class="nc" id="L598">            add(percentageLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L599">            add(progressBar, BorderLayout.CENTER);</span>
+<span class="nc" id="L600">        }</span>
+        
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            
+<span class="nc" id="L606">            String percentage = value.toString().replace(&quot;%&quot;, &quot;&quot;);</span>
+<span class="nc" id="L607">            int percentValue = Integer.parseInt(percentage);</span>
+            
+<span class="nc" id="L609">            percentageLabel.setText(value.toString());</span>
+<span class="nc" id="L610">            progressBar.setValue(percentValue);</span>
+            
+            // Color basado en el porcentaje
+<span class="nc bnc" id="L613" title="All 2 branches missed.">            if (percentValue &gt;= 90) {</span>
+<span class="nc" id="L614">                progressBar.setForeground(new Color(34, 197, 94));</span>
+<span class="nc" id="L615">                percentageLabel.setForeground(new Color(34, 197, 94));</span>
+<span class="nc bnc" id="L616" title="All 2 branches missed.">            } else if (percentValue &gt;= 80) {</span>
+<span class="nc" id="L617">                progressBar.setForeground(new Color(245, 158, 11));</span>
+<span class="nc" id="L618">                percentageLabel.setForeground(new Color(245, 158, 11));</span>
+<span class="nc" id="L619">            } else {</span>
+<span class="nc" id="L620">                progressBar.setForeground(new Color(239, 68, 68));</span>
+<span class="nc" id="L621">                percentageLabel.setForeground(new Color(239, 68, 68));</span>
+            }
+            
+            // Fondo basado en selección
+<span class="nc bnc" id="L625" title="All 2 branches missed.">            if (isSelected) {</span>
+<span class="nc" id="L626">                setBackground(new Color(239, 246, 255));</span>
+<span class="nc" id="L627">            } else {</span>
+<span class="nc" id="L628">                setBackground(Color.WHITE);</span>
+            }
+            
+<span class="nc" id="L631">            return this;</span>
+        }
+    }
+    
+    private void handleLogout(ActionEvent e) {
+<span class="nc" id="L636">        authController.logout();</span>
+<span class="nc" id="L637">        dispose();</span>
+<span class="nc" id="L638">        new LoginView(authController).setVisible(true);</span>
+<span class="nc" id="L639">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

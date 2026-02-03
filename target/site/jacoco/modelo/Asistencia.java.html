@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Asistencia.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">attendance-control-system</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">Asistencia.java</span></div><h1>Asistencia.java</h1><pre class="source lang-java linenums">package modelo;
+
+import java.util.Date;
+
+public class Asistencia {
+    private String id;
+    private String cursoId;
+    private String estudianteId;
+    private Date fecha;
+    private String estado; // &quot;present&quot;, &quot;absent&quot;, &quot;late&quot;
+    private String observaciones;
+    
+<span class="fc" id="L13">    public Asistencia() {}</span>
+    
+<span class="fc" id="L15">    public Asistencia(String cursoId, String estudianteId, Date fecha, String estado) {</span>
+<span class="fc" id="L16">        this.cursoId = cursoId;</span>
+<span class="fc" id="L17">        this.estudianteId = estudianteId;</span>
+<span class="fc" id="L18">        this.fecha = fecha;</span>
+<span class="fc" id="L19">        this.estado = estado;</span>
+<span class="fc" id="L20">    }</span>
+    
+    // Getters y Setters
+<span class="fc" id="L23">    public String getId() { return id; }</span>
+<span class="fc" id="L24">    public void setId(String id) { this.id = id; }</span>
+    
+<span class="fc" id="L26">    public String getCursoId() { return cursoId; }</span>
+<span class="fc" id="L27">    public void setCursoId(String cursoId) { this.cursoId = cursoId; }</span>
+    
+<span class="fc" id="L29">    public String getEstudianteId() { return estudianteId; }</span>
+<span class="fc" id="L30">    public void setEstudianteId(String estudianteId) { this.estudianteId = estudianteId; }</span>
+    
+<span class="fc" id="L32">    public Date getFecha() { return fecha; }</span>
+<span class="fc" id="L33">    public void setFecha(Date fecha) { this.fecha = fecha; }</span>
+    
+<span class="fc" id="L35">    public String getEstado() { return estado; }</span>
+<span class="fc" id="L36">    public void setEstado(String estado) { this.estado = estado; }</span>
+    
+<span class="fc" id="L38">    public String getObservaciones() { return observaciones; }</span>
+<span class="fc" id="L39">    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
