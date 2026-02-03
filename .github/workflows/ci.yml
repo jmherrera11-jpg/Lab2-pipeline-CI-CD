@@ -1,4 +1,4 @@
-name: CI Pipeline - Tests and Coverage
+name: CI Pipeline - Full with MongoDB
 
 on:
   push:
@@ -10,14 +10,24 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        # Opciones para MongoDB 6.0+
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand(\"ping\")'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
     steps:
-    # 1. CHECKOUT - Obtener código del repositorio
+    # 1. CHECKOUT
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     
-    # 2. SETUP JAVA - Configurar entorno Java 17
+    # 2. SETUP JAVA
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -25,24 +35,59 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
-    # 3. INSTALAR DEPENDENCIAS - Resolver dependencias Maven
-    - name: Install dependencies
-      run: mvn dependency:go-offline
+    # 3. WAIT FOR MONGODB (NECESARIO)
+    - name: Wait for MongoDB to be ready
+      run: |
+        echo "Checking MongoDB connection..."
+        # Instalar mongosh para verificar conexión
+        curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
+        echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+        sudo apt-get update
+        sudo apt-get install -y mongodb-mongosh
+        
+        # Esperar hasta que MongoDB responda
+        for i in {1..30}; do
+          if mongosh --host localhost --port 27017 --eval "db.runCommand('ping')" --quiet; then
+            echo "✅ MongoDB is ready!"
+            break
+          fi
+          echo "⏳ Waiting for MongoDB... attempt $i/30"
+          sleep 2
+        done
+        
+        # Crear base de datos de prueba
+        mongosh --host localhost --port 27017 --eval "use testdb; db.createCollection('test');"
+        echo "🎯 Test database created"
     
-    # 4. EJECUTAR PRUEBAS - Ejecutar todas las pruebas
-    - name: Run tests with JUnit
-      run: mvn test
+    # 4. CONFIGURAR VARIABLES DE ENTORNO
+    - name: Set MongoDB environment
+      run: |
+        echo "MONGODB_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
+        echo "SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
     
-    # 5. GENERAR REPORTE DE COBERTURA - Ejecutar JaCoCo
+    # 5. BUILD WITH TESTS
+    - name: Build and test with MongoDB
+      run: |
+        echo "Running tests with MongoDB URI: $MONGODB_URI"
+        mvn clean test -Dspring.data.mongodb.uri=mongodb://localhost:27017/testdb
+    
+    # 6. GENERATE JACOCO REPORT
     - name: Generate coverage report
-      run: mvn verify
+      if: success()
+      run: mvn jacoco:report
     
-    # 6. SUBIR REPORTE DE COBERTURA (Opcional)
+    # 7. UPLOAD ARTIFACTS
+    - name: Upload test reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-reports
+        path: target/surefire-reports/
+    
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: jacoco-report
+        name: coverage-report
         path: target/site/jacoco/
-        retention-days: # Última actualización: Mon Feb  2 20:01:55 HPS 2026
-# Última actualización: Mon Feb  2 20:02:39 HPS 2026
+        retention-days: 7
