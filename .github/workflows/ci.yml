@@ -44,5 +44,5 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/
-        retention-days: 7# Última actualización: Mon Feb  2 20:01:55 HPS 2026
+        retention-days: # Última actualización: Mon Feb  2 20:01:55 HPS 2026
 # Última actualización: Mon Feb  2 20:02:39 HPS 2026
