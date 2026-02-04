@@ -1,0 +1,12 @@
+util\MongoDBTest.class
+controlador\CursoControllerTest.class
+util\UtilTests.class
+controlador\AuthControllerTest.class
+modelo\ModelBusinessLogicTests.class
+controlador\AsistenciaControllerTest.class
+controlador\ProfesorControllerTest.class
+util\MongoDBFullCRUDTest.class
+vista\CoordinatorCRUDViewsTest.class
+controlador\ReporteControllerTest.class
+modelo\ModelTests.class
+controlador\EstudianteControllerTest.class

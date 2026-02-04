@@ -93,8 +93,8 @@ public class EstudianteController {
 <span class="fc" id="L93">            ).first();</span>
             
 <span class="pc bpc" id="L95" title="1 of 2 branches missed.">            return doc != null ? documentToEstudiante(doc) : null;</span>
-<span class="nc" id="L96">        } catch (Exception e) {</span>
-<span class="nc" id="L97">            return null;</span>
+<span class="fc" id="L96">        } catch (Exception e) {</span>
+<span class="fc" id="L97">            return null;</span>
         }
     }
     
@@ -114,16 +114,16 @@ public class EstudianteController {
             
             // Verificar si el nuevo número ya existe en otro estudiante
 <span class="fc" id="L116">            Estudiante estudianteActual = obtenerEstudiantePorId(id);</span>
-<span class="pc bpc" id="L117" title="2 of 4 branches missed.">            if (estudianteActual != null &amp;&amp; !estudianteActual.getNumeroEstudiante().equals(numeroEstudiante)) {</span>
-<span class="nc" id="L118">                Document estudianteConMismoNumero = estudiantesCollection.find(</span>
-<span class="nc" id="L119">                    Filters.and(</span>
-<span class="nc" id="L120">                        Filters.eq(&quot;numeroEstudiante&quot;, numeroEstudiante),</span>
-<span class="nc" id="L121">                        Filters.ne(&quot;_id&quot;, objectId)</span>
+<span class="pc bpc" id="L117" title="1 of 4 branches missed.">            if (estudianteActual != null &amp;&amp; !estudianteActual.getNumeroEstudiante().equals(numeroEstudiante)) {</span>
+<span class="fc" id="L118">                Document estudianteConMismoNumero = estudiantesCollection.find(</span>
+<span class="fc" id="L119">                    Filters.and(</span>
+<span class="fc" id="L120">                        Filters.eq(&quot;numeroEstudiante&quot;, numeroEstudiante),</span>
+<span class="fc" id="L121">                        Filters.ne(&quot;_id&quot;, objectId)</span>
                     )
-<span class="nc" id="L123">                ).first();</span>
+<span class="fc" id="L123">                ).first();</span>
                 
-<span class="nc bnc" id="L125" title="All 2 branches missed.">                if (estudianteConMismoNumero != null) {</span>
-<span class="nc" id="L126">                    return false;</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                if (estudianteConMismoNumero != null) {</span>
+<span class="fc" id="L126">                    return false;</span>
                 }
             }
             
@@ -138,8 +138,8 @@ public class EstudianteController {
             );
             
 <span class="fc" id="L140">            return true;</span>
-<span class="nc" id="L141">        } catch (Exception e) {</span>
-<span class="nc" id="L142">            return false;</span>
+<span class="fc" id="L141">        } catch (Exception e) {</span>
+<span class="fc" id="L142">            return false;</span>
         }
     }
     
@@ -148,8 +148,8 @@ public class EstudianteController {
         try {
 <span class="fc" id="L149">            estudiantesCollection.deleteOne(Filters.eq(&quot;_id&quot;, new ObjectId(id)));</span>
 <span class="fc" id="L150">            return true;</span>
-<span class="nc" id="L151">        } catch (Exception e) {</span>
-<span class="nc" id="L152">            return false;</span>
+<span class="fc" id="L151">        } catch (Exception e) {</span>
+<span class="fc" id="L152">            return false;</span>
         }
     }
     

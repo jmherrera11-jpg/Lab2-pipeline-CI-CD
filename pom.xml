@@ -77,6 +77,18 @@
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<!-- CRÍTICO: Exclusiones deben estar aquí en prepare-agent -->
+						<configuration>
+							<excludes>
+								<!-- Excluir TODO el paquete vista -->
+								<exclude>vista/**</exclude>
+								<!-- Excluir clases principales y main -->
+								<exclude>**/App.class</exclude>
+								<exclude>**/Main.class</exclude>
+								<!-- Excluir clases internas y anónimas generadas por Swing -->
+								<exclude>**/*$*.class</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 					<execution>
 						<id>report</id>
@@ -84,6 +96,15 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<!-- Mismas exclusiones en el reporte -->
+						<configuration>
+							<excludes>
+								<exclude>vista/**</exclude>
+								<exclude>**/App.class</exclude>
+								<exclude>**/Main.class</exclude>
+								<exclude>**/*$*.class</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 					<execution>
 						<id>jacoco-check</id>
@@ -91,6 +112,13 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<!-- Mismas exclusiones en el check -->
+							<excludes>
+								<exclude>vista/**</exclude>
+								<exclude>**/App.class</exclude>
+								<exclude>**/Main.class</exclude>
+								<exclude>**/*$*.class</exclude>
+							</excludes>
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
@@ -118,14 +146,6 @@
 									</limits>
 								</rule>
 							</rules>
-							<!-- AÑADE ESTA CONFIGURACIÓN PARA EXCLUIR VISTAS -->
-							<excludes>
-								<exclude>**/vista/*.class</exclude>
-								<exclude>**/App.class</exclude>
-								<exclude>**/Main.class</exclude>
-								<exclude>**/*$*.class</exclude> <!-- Excluye
-								clases internas/anónimas -->
-							</excludes>
 						</configuration>
 					</execution>
 				</executions>
