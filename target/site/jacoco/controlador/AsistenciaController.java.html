@@ -55,7 +55,7 @@ public class AsistenciaController {
 <span class="fc" id="L55">                .append(&quot;estado&quot;, entry.getValue());</span>
                 
 <span class="fc" id="L57">            registros.add(asistencia);</span>
-        }
+<span class="fc" id="L58">        }</span>
         
 <span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (!registros.isEmpty()) {</span>
 <span class="fc" id="L61">            asistenciasCollection.insertMany(registros);</span>
@@ -67,7 +67,7 @@ public class AsistenciaController {
         
 <span class="fc bfc" id="L68" title="All 2 branches covered.">        for (Document doc : asistenciasCollection.find(Filters.eq(&quot;cursoId&quot;, cursoId))) {</span>
 <span class="fc" id="L69">            resultado.put(doc.getString(&quot;estudianteId&quot;), doc.getString(&quot;estado&quot;));</span>
-        }
+<span class="fc" id="L70">        }</span>
         
 <span class="fc" id="L72">        return resultado;</span>
     }
@@ -96,7 +96,7 @@ public class AsistenciaController {
 <span class="nc" id="L96">    }</span>
 
     public void limpiarAsistenciasPorCurso(String cursoId) {
-<span class="nc" id="L99">        asistenciasCollection.deleteMany(Filters.eq(&quot;cursoId&quot;, cursoId));</span>
-<span class="nc" id="L100">    }</span>
+<span class="fc" id="L99">        asistenciasCollection.deleteMany(Filters.eq(&quot;cursoId&quot;, cursoId));</span>
+<span class="fc" id="L100">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

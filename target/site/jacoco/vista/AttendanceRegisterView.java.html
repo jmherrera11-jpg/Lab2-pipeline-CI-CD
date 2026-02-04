@@ -180,7 +180,7 @@ public class AttendanceRegisterView extends JFrame {
 <span class="nc" id="L180">        iconLabel.setForeground(new Color(37, 99, 235));</span>
         
 <span class="nc" id="L182">        JLabel infoLabel = new JLabel(</span>
-<span class="nc" id="L183">            &quot;&lt;html&gt;Attendance recording is open until &lt;b&gt;10:45 AM&lt;/b&gt;. Changes after this time will require administrator approval. &quot; +</span>
+            &quot;&lt;html&gt;Attendance recording is open until &lt;b&gt;10:45 AM&lt;/b&gt;. Changes after this time will require administrator approval. &quot; +
             &quot;Please ensure all students are marked correctly before saving.&lt;/html&gt;&quot;
         );
 <span class="nc" id="L186">        infoLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 13));</span>
@@ -293,20 +293,20 @@ public class AttendanceRegisterView extends JFrame {
 <span class="nc bnc" id="L293" title="All 2 branches missed.">            } else if (buttons[2].isSelected()) {</span>
 <span class="nc" id="L294">                status = &quot;absent&quot;;</span>
 <span class="nc" id="L295">                absentCount++;</span>
-<span class="nc" id="L296">            } else {</span>
+            } else {
 <span class="nc" id="L297">                presentCount++;</span>
             }
             
 <span class="nc" id="L300">            asistencias.put(studentId, status);</span>
-        }
+<span class="nc" id="L301">        }</span>
         
 <span class="nc" id="L303">        asistenciaController.registrarAsistencia(curso.getId(), asistencias);</span>
         
 <span class="nc" id="L305">        JOptionPane.showMessageDialog(this, </span>
 <span class="nc" id="L306">            &quot;Attendance saved successfully for &quot; + asistencias.size() + &quot; students.\n&quot; +</span>
-<span class="nc" id="L307">            &quot;Present: &quot; + presentCount + &quot; | Late: &quot; + lateCount + &quot; | Absent: &quot; + absentCount,</span>
-<span class="nc" id="L308">            &quot;Success&quot;,</span>
-<span class="nc" id="L309">            JOptionPane.INFORMATION_MESSAGE);</span>
+            &quot;Present: &quot; + presentCount + &quot; | Late: &quot; + lateCount + &quot; | Absent: &quot; + absentCount,
+            &quot;Success&quot;,
+            JOptionPane.INFORMATION_MESSAGE);
 <span class="nc" id="L310">    }</span>
     
     // Custom cell renderer for status column
@@ -351,7 +351,7 @@ public class AttendanceRegisterView extends JFrame {
 <span class="nc" id="L351">                        BorderFactory.createEmptyBorder(3, 10, 3, 10)</span>
                     ));
 <span class="nc" id="L353">                    button.setForeground(color);</span>
-<span class="nc" id="L354">                } else {</span>
+                } else {
 <span class="nc" id="L355">                    button.setBackground(Color.WHITE);</span>
 <span class="nc" id="L356">                    button.setBorder(BorderFactory.createCompoundBorder(</span>
 <span class="nc" id="L357">                        BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
@@ -382,7 +382,7 @@ public class AttendanceRegisterView extends JFrame {
             
 <span class="nc bnc" id="L383" title="All 2 branches missed.">            if (isSelected) {</span>
 <span class="nc" id="L384">                panel.setBackground(new Color(239, 246, 255));</span>
-<span class="nc" id="L385">            } else {</span>
+            } else {
 <span class="nc" id="L386">                panel.setBackground(Color.WHITE);</span>
             }
             
@@ -451,7 +451,7 @@ public class AttendanceRegisterView extends JFrame {
 <span class="nc" id="L451">                        BorderFactory.createEmptyBorder(3, 10, 3, 10)</span>
                     ));
 <span class="nc" id="L453">                    button.setForeground(color);</span>
-<span class="nc" id="L454">                } else {</span>
+                } else {
 <span class="nc" id="L455">                    button.setBackground(Color.WHITE);</span>
 <span class="nc" id="L456">                    button.setBorder(BorderFactory.createCompoundBorder(</span>
 <span class="nc" id="L457">                        BorderFactory.createLineBorder(new Color(226, 232, 240), 1),</span>
@@ -483,7 +483,7 @@ public class AttendanceRegisterView extends JFrame {
             
 <span class="nc bnc" id="L484" title="All 2 branches missed.">            if (isSelected) {</span>
 <span class="nc" id="L485">                panel.setBackground(new Color(239, 246, 255));</span>
-<span class="nc" id="L486">            } else {</span>
+            } else {
 <span class="nc" id="L487">                panel.setBackground(Color.WHITE);</span>
             }
             

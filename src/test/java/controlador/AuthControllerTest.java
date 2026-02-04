@@ -77,4 +77,20 @@ public class AuthControllerTest {
         controller.login("coordinator");
         assertEquals("coordinator", controller.getRolActual());
     }
+    @Test
+    void getUsuarioActual_debe_retornar_nulo_despues_de_logout() {
+        AuthController controller = new AuthController();
+        
+        controller.login("teacher");
+        assertNotNull(controller.getUsuarioActual());
+        
+        controller.logout();
+        assertNull(controller.getUsuarioActual());
+    }
+
+    @Test
+    void getRolActual_debe_retornar_null_sin_login() {
+        AuthController controller = new AuthController();
+        assertNull(controller.getRolActual());
+    }
 }

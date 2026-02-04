@@ -56,8 +56,8 @@ public class ReporteController {
 <span class="fc" id="L56">        Map&lt;String, Object&gt; reporte = new HashMap&lt;&gt;();</span>
         
 <span class="fc" id="L58">        Curso curso = cursoController.obtenerCursoPorId(cursoId);</span>
-<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (curso == null) {</span>
-<span class="nc" id="L60">            return null;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (curso == null) {</span>
+<span class="fc" id="L60">            return null;</span>
         }
         
         // Obtener estadísticas desde MongoDB usando agregaciones
@@ -95,7 +95,7 @@ public class ReporteController {
 <span class="fc" id="L95">            datos.put(&quot;estado&quot;, determinarEstadoAsistencia(porcentaje));</span>
             
 <span class="fc" id="L97">            reporte.add(datos);</span>
-        }
+<span class="fc" id="L98">        }</span>
         
         // Ordenar por porcentaje de asistencia
 <span class="fc" id="L101">        reporte.sort(Comparator.comparingDouble(m -&gt; (Double) m.get(&quot;porcentajeAsistencia&quot;)));</span>
@@ -110,7 +110,7 @@ public class ReporteController {
 <span class="fc" id="L110">        double suma = 0.0;</span>
 <span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Estudiante estudiante : estudiantes) {</span>
 <span class="fc" id="L112">            suma += asistenciaController.calcularPorcentajeAsistencia(estudiante.getId());</span>
-        }
+<span class="fc" id="L113">        }</span>
         
 <span class="fc" id="L115">        return suma / estudiantes.size();</span>
     }
@@ -130,7 +130,7 @@ public class ReporteController {
                 
 <span class="fc" id="L131">                estudiantesRiesgo.add(datos);</span>
             }
-        }
+<span class="fc" id="L133">        }</span>
         
 <span class="fc" id="L135">        return estudiantesRiesgo;</span>
     }
@@ -144,7 +144,7 @@ public class ReporteController {
 <span class="fc" id="L144">            Filters.eq(&quot;estudianteId&quot;, estudianteId)</span>
         )) {
 <span class="fc" id="L146">            cursoIds.add(doc.getString(&quot;cursoId&quot;));</span>
-        }
+<span class="fc" id="L147">        }</span>
         
         // Obtener códigos de cursos
 <span class="fc bfc" id="L150" title="All 2 branches covered.">        for (String cursoId : cursoIds) {</span>
@@ -152,13 +152,13 @@ public class ReporteController {
 <span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (curso != null) {</span>
 <span class="nc" id="L153">                cursos.add(curso.getCodigo());</span>
             }
-        }
+<span class="fc" id="L155">        }</span>
         
 <span class="fc" id="L157">        return cursos;</span>
     }
     
     private String determinarEstadoAsistencia(double porcentaje) {
-<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (porcentaje &gt;= 90.0) return &quot;Excelente&quot;;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (porcentaje &gt;= 90.0) return &quot;Excelente&quot;;</span>
 <span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (porcentaje &gt;= 80.0) return &quot;Bueno&quot;;</span>
 <span class="fc bfc" id="L163" title="All 2 branches covered.">        if (porcentaje &gt;= 70.0) return &quot;Regular&quot;;</span>
 <span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (porcentaje &gt;= 60.0) return &quot;Preocupante&quot;;</span>

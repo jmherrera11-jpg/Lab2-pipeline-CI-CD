@@ -455,4 +455,54 @@ public class ModelTests {
         assertNotNull(asistencia.getFecha());
         assertNotNull(asistencia.getEstado());
     }
+    @Test
+    @DisplayName("Modelos - Constructor con nulls")
+    void testConstructorsWithNulls() {
+        // Usuario con null en constructor
+        Usuario usuario = new Usuario(null, null, null, null);
+        assertNull(usuario.getId());
+        assertNull(usuario.getNombre());
+        assertNull(usuario.getEmail());
+        assertNull(usuario.getRol());
+        
+        // Estudiante con null en constructor
+        Estudiante estudiante = new Estudiante(null, null, null, null);
+        assertNull(estudiante.getId());
+        assertNull(estudiante.getNumeroEstudiante());
+        assertNull(estudiante.getNombre());
+        assertNull(estudiante.getEmail());
+        assertEquals("active", estudiante.getStatus()); // Este tiene valor por defecto
+        
+        // Curso con null en constructor
+        Curso curso = new Curso(null, null, null, null, null);
+        assertNull(curso.getId());
+        assertNull(curso.getCodigo());
+        assertNull(curso.getNombre());
+        assertNull(curso.getHorario());
+        assertNull(curso.getAula());
+    }
+
+    @Test
+    @DisplayName("Modelos - Setters con nulls y valores especiales")
+    void testSettersWithSpecialValues() {
+        Asistencia asistencia = new Asistencia();
+        
+        // Test con nulls
+        asistencia.setId(null);
+        asistencia.setEstado(null);
+        asistencia.setObservaciones(null);
+        asistencia.setFecha(null);
+        
+        assertNull(asistencia.getId());
+        assertNull(asistencia.getEstado());
+        assertNull(asistencia.getObservaciones());
+        assertNull(asistencia.getFecha());
+        
+        // Test con valores extremos
+        asistencia.setObservaciones(" ");
+        assertEquals(" ", asistencia.getObservaciones());
+        
+        asistencia.setEstado("");
+        assertEquals("", asistencia.getEstado());
+    }
 }

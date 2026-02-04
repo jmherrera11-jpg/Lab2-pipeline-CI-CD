@@ -46,7 +46,7 @@ public class DashboardView extends JFrame {
         
         // Header con logout
 <span class="nc" id="L48">        JPanel headerPanel = createHeaderPanel(&quot;Teacher Dashboard&quot;, </span>
-<span class="nc" id="L49">            &quot;Welcome back, Prof. Anderson. Select a course to manage attendance.&quot;);</span>
+            &quot;Welcome back, Prof. Anderson. Select a course to manage attendance.&quot;);
         
         // Courses Grid
 <span class="nc" id="L52">        JPanel coursesPanel = new JPanel(new GridLayout(0, 3, 20, 20));</span>
@@ -216,7 +216,7 @@ public class DashboardView extends JFrame {
         
         // Header con logout
 <span class="nc" id="L218">        JPanel headerPanel = createHeaderPanel(&quot;Student Dashboard&quot;, </span>
-<span class="nc" id="L219">            &quot;Overview of your academic attendance performance.&quot;);</span>
+            &quot;Overview of your academic attendance performance.&quot;);
         
         // Panel de estadísticas
 <span class="nc" id="L222">        JPanel statsPanel = createStudentStatsPanel();</span>
@@ -304,10 +304,10 @@ public class DashboardView extends JFrame {
         // Tabla de actividad
 <span class="nc" id="L305">        String[] columnNames = {&quot;Date&quot;, &quot;Course&quot;, &quot;Status&quot;};</span>
 <span class="nc" id="L306">        Object[][] data = {</span>
-<span class="nc" id="L307">            {&quot;2024-03-10&quot;, &quot;Database Systems&quot;, &quot;present&quot;},</span>
-<span class="nc" id="L308">            {&quot;2024-03-09&quot;, &quot;Calculus I&quot;, &quot;late&quot;},</span>
-<span class="nc" id="L309">            {&quot;2024-03-08&quot;, &quot;Intro to CS&quot;, &quot;present&quot;},</span>
-<span class="nc" id="L310">            {&quot;2024-03-05&quot;, &quot;Database Systems&quot;, &quot;absent&quot;}</span>
+            {&quot;2024-03-10&quot;, &quot;Database Systems&quot;, &quot;present&quot;},
+            {&quot;2024-03-09&quot;, &quot;Calculus I&quot;, &quot;late&quot;},
+            {&quot;2024-03-08&quot;, &quot;Intro to CS&quot;, &quot;present&quot;},
+            {&quot;2024-03-05&quot;, &quot;Database Systems&quot;, &quot;absent&quot;}
         };
         
 <span class="nc" id="L313">        JTable table = new JTable(data, columnNames);</span>
@@ -331,7 +331,7 @@ public class DashboardView extends JFrame {
         
         // Header con logout
 <span class="nc" id="L333">        JPanel headerPanel = createHeaderPanel(&quot;Academic Coordinator Dashboard&quot;, </span>
-<span class="nc" id="L334">            &quot;System overview and attendance reporting.&quot;);</span>
+            &quot;System overview and attendance reporting.&quot;);
         
         // Panel de estadísticas
 <span class="nc" id="L337">        JPanel statsPanel = createCoordinatorStatsPanel();</span>
@@ -372,28 +372,28 @@ public class DashboardView extends JFrame {
         
         // Botón de generar reportes
 <span class="nc" id="L374">        JButton reportsButton = createActionButton(&quot;View Reports&quot;, </span>
-<span class="nc" id="L375">            &quot;Generate and view attendance reports&quot;, new Color(59, 130, 246));</span>
+            &quot;Generate and view attendance reports&quot;, new Color(59, 130, 246));
 <span class="nc" id="L376">        reportsButton.addActionListener(e -&gt; {</span>
 <span class="nc" id="L377">            new CoordinatorReportView(authController).setVisible(true);</span>
 <span class="nc" id="L378">        });</span>
         
         // Botón de gestionar cursos
 <span class="nc" id="L381">        JButton manageCoursesButton = createActionButton(&quot;Manage Courses&quot;, </span>
-<span class="nc" id="L382">            &quot;Add, edit or remove courses&quot;, new Color(168, 85, 247));</span>
+            &quot;Add, edit or remove courses&quot;, new Color(168, 85, 247));
 <span class="nc" id="L383">        manageCoursesButton.addActionListener(e -&gt; {</span>
 <span class="nc" id="L384">            new GestionCursosView(authController).setVisible(true);</span>
 <span class="nc" id="L385">        });</span>
         
         // Botón de gestionar estudiantes
 <span class="nc" id="L388">        JButton manageStudentsButton = createActionButton(&quot;Manage Students&quot;, </span>
-<span class="nc" id="L389">            &quot;Add, edit or remove students&quot;, new Color(34, 197, 94));</span>
+            &quot;Add, edit or remove students&quot;, new Color(34, 197, 94));
 <span class="nc" id="L390">        manageStudentsButton.addActionListener(e -&gt; {</span>
 <span class="nc" id="L391">            new GestionEstudiantesView(authController).setVisible(true);</span>
 <span class="nc" id="L392">        });</span>
         
         // NUEVO BOTÓN: Gestionar profesores
 <span class="nc" id="L395">        JButton manageTeachersButton = createActionButton(&quot;Manage Teachers&quot;, </span>
-<span class="nc" id="L396">            &quot;Add, edit or remove teachers&quot;, new Color(245, 158, 11)); // Color naranja</span>
+            &quot;Add, edit or remove teachers&quot;, new Color(245, 158, 11)); // Color naranja
 <span class="nc" id="L397">        manageTeachersButton.addActionListener(e -&gt; {</span>
 <span class="nc" id="L398">            new GestionProfesoresView(authController).setVisible(true);</span>
 <span class="nc" id="L399">        });</span>
@@ -470,15 +470,15 @@ public class DashboardView extends JFrame {
         
         // Total Students
 <span class="nc" id="L472">        JPanel studentsPanel = createMetricCard(&quot;Total Students&quot;, &quot;142&quot;, </span>
-<span class="nc" id="L473">            new Color(59, 130, 246), &quot;Students&quot;);</span>
+            new Color(59, 130, 246), &quot;Students&quot;);
         
         // Average Attendance
 <span class="nc" id="L476">        JPanel attendancePanel = createMetricCard(&quot;Avg Attendance&quot;, &quot;88.4%&quot;, </span>
-<span class="nc" id="L477">            new Color(168, 85, 247), &quot;Overall&quot;);</span>
+            new Color(168, 85, 247), &quot;Overall&quot;);
         
         // At Risk
 <span class="nc" id="L480">        JPanel riskPanel = createMetricCard(&quot;At Risk&quot;, &quot;3&quot;, </span>
-<span class="nc" id="L481">            new Color(245, 158, 11), &quot;Students&quot;);</span>
+            new Color(245, 158, 11), &quot;Students&quot;);
         
 <span class="nc" id="L483">        statsPanel.add(studentsPanel);</span>
 <span class="nc" id="L484">        statsPanel.add(attendancePanel);</span>
@@ -556,9 +556,9 @@ public class DashboardView extends JFrame {
         // Tabla de cursos
 <span class="nc" id="L557">        String[] columnNames = {&quot;Course Code&quot;, &quot;Course Name&quot;, &quot;Schedule&quot;, &quot;Attendance Rate&quot;};</span>
 <span class="nc" id="L558">        Object[][] data = {</span>
-<span class="nc" id="L559">            {&quot;CS101&quot;, &quot;Database Systems&quot;, &quot;Mon/Wed 9:00-10:30&quot;, &quot;92%&quot;},</span>
-<span class="nc" id="L560">            {&quot;CS102&quot;, &quot;Calculus I&quot;, &quot;Tue/Thu 11:00-12:30&quot;, &quot;88%&quot;},</span>
-<span class="nc" id="L561">            {&quot;CS103&quot;, &quot;Intro to CS&quot;, &quot;Mon/Fri 14:00-15:30&quot;, &quot;95%&quot;}</span>
+            {&quot;CS101&quot;, &quot;Database Systems&quot;, &quot;Mon/Wed 9:00-10:30&quot;, &quot;92%&quot;},
+            {&quot;CS102&quot;, &quot;Calculus I&quot;, &quot;Tue/Thu 11:00-12:30&quot;, &quot;88%&quot;},
+            {&quot;CS103&quot;, &quot;Intro to CS&quot;, &quot;Mon/Fri 14:00-15:30&quot;, &quot;95%&quot;}
         };
         
 <span class="nc" id="L564">        JTable table = new JTable(data, columnNames);</span>
@@ -616,7 +616,7 @@ public class DashboardView extends JFrame {
 <span class="nc bnc" id="L616" title="All 2 branches missed.">            } else if (percentValue &gt;= 80) {</span>
 <span class="nc" id="L617">                progressBar.setForeground(new Color(245, 158, 11));</span>
 <span class="nc" id="L618">                percentageLabel.setForeground(new Color(245, 158, 11));</span>
-<span class="nc" id="L619">            } else {</span>
+            } else {
 <span class="nc" id="L620">                progressBar.setForeground(new Color(239, 68, 68));</span>
 <span class="nc" id="L621">                percentageLabel.setForeground(new Color(239, 68, 68));</span>
             }
@@ -624,7 +624,7 @@ public class DashboardView extends JFrame {
             // Fondo basado en selección
 <span class="nc bnc" id="L625" title="All 2 branches missed.">            if (isSelected) {</span>
 <span class="nc" id="L626">                setBackground(new Color(239, 246, 255));</span>
-<span class="nc" id="L627">            } else {</span>
+            } else {
 <span class="nc" id="L628">                setBackground(Color.WHITE);</span>
             }
             

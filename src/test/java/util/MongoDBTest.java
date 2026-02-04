@@ -255,6 +255,43 @@ public class MongoDBTest {
             Filters.regex("email", "crud@", "i")
         ));
     }
+    
+    @Test
+    void getInstance_debe_retornar_singleton() {
+        MongoDBConnection instance1 = MongoDBConnection.getInstance();
+        MongoDBConnection instance2 = MongoDBConnection.getInstance();
+        
+        assertNotNull(instance1);
+        assertNotNull(instance2);
+        assertSame(instance1, instance2, "Debería ser la misma instancia (singleton)");
+    }
+    
+    @Test
+    void getDatabase_debe_retornar_database_valido() {
+        MongoDBConnection connection = MongoDBConnection.getInstance();
+        MongoDatabase database = connection.getDatabase();
+        
+        assertNotNull(database);
+        assertEquals("attendance_system", database.getName());
+    }
+    
+    @Test
+    void close_no_debe_lanzar_excepcion() {
+        MongoDBConnection connection = MongoDBConnection.getInstance();
+        
+        // close() debería funcionar sin excepciones
+        assertDoesNotThrow(() -> connection.close());
+        
+        // Reestablecer instancia para otros tests
+        try {
+            var field = MongoDBConnection.class.getDeclaredField("instance");
+            field.setAccessible(true);
+            field.set(null, null);
+        } catch (Exception e) {
+            // Ignorar
+        }
+    }
+    
  // Verificar que MongoDB está corriendo antes de los tests
     @BeforeAll
     static void checkMongoDB() {

@@ -108,4 +108,28 @@ public class AsistenciaControllerTest {
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
     }
+    @Test
+    void limpiarAsistenciasPorCurso_debe_funcionar() {
+        // Primero crear algunas asistencias
+        Map<String, String> asistencias = new HashMap<>();
+        var estudiantes = controller.obtenerTodosEstudiantes();
+        assertFalse(estudiantes.isEmpty());
+        
+        String estudianteId = estudiantes.get(0).getId();
+        asistencias.put(estudianteId, "present");
+        
+        controller.registrarAsistencia("CURSO_TEST_LIMPIEZA", asistencias);
+        
+        // Verificar que hay asistencias
+        var resultadoAntes = controller.obtenerAsistenciaPorCurso("CURSO_TEST_LIMPIEZA");
+        assertNotNull(resultadoAntes);
+        
+        // Limpiar
+        controller.limpiarAsistenciasPorCurso("CURSO_TEST_LIMPIEZA");
+        
+        // Verificar que se limpiaron
+        var resultadoDespues = controller.obtenerAsistenciaPorCurso("CURSO_TEST_LIMPIEZA");
+        assertNotNull(resultadoDespues);
+        assertTrue(resultadoDespues.isEmpty());
+    }
 }

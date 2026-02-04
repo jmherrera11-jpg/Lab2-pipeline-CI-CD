@@ -76,7 +76,7 @@ public class CursoController {
         
 <span class="fc bfc" id="L77" title="All 2 branches covered.">        for (Document doc : cursosCollection.find()) {</span>
 <span class="fc" id="L78">            cursos.add(documentToCurso(doc));</span>
-        }
+<span class="fc" id="L79">        }</span>
         
 <span class="fc" id="L81">        return cursos;</span>
     }
@@ -84,7 +84,7 @@ public class CursoController {
     public Curso obtenerCursoPorId(String id) {
         try {
 <span class="fc" id="L86">            Document doc = cursosCollection.find(Filters.eq(&quot;_id&quot;, new ObjectId(id))).first();</span>
-<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            return doc != null ? documentToCurso(doc) : null;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            return doc != null ? documentToCurso(doc) : null;</span>
 <span class="fc" id="L88">        } catch (Exception e) {</span>
 <span class="fc" id="L89">            return null;</span>
         }
@@ -101,16 +101,16 @@ public class CursoController {
 <span class="fc" id="L101">            ObjectId objectId = new ObjectId(id);</span>
             
             // Verificar si el nuevo código ya existe en otro curso
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (!obtenerCursoPorId(id).getCodigo().equals(codigo)) {</span>
-<span class="nc" id="L105">                Document cursoConMismoCodigo = cursosCollection.find(</span>
-<span class="nc" id="L106">                    Filters.and(</span>
-<span class="nc" id="L107">                        Filters.eq(&quot;codigo&quot;, codigo),</span>
-<span class="nc" id="L108">                        Filters.ne(&quot;_id&quot;, objectId)</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            if (!obtenerCursoPorId(id).getCodigo().equals(codigo)) {</span>
+<span class="fc" id="L105">                Document cursoConMismoCodigo = cursosCollection.find(</span>
+<span class="fc" id="L106">                    Filters.and(</span>
+<span class="fc" id="L107">                        Filters.eq(&quot;codigo&quot;, codigo),</span>
+<span class="fc" id="L108">                        Filters.ne(&quot;_id&quot;, objectId)</span>
                     )
-<span class="nc" id="L110">                ).first();</span>
+<span class="fc" id="L110">                ).first();</span>
                 
-<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (cursoConMismoCodigo != null) {</span>
-<span class="nc" id="L113">                    return false;</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                if (cursoConMismoCodigo != null) {</span>
+<span class="fc" id="L113">                    return false;</span>
                 }
             }
             
@@ -136,8 +136,8 @@ public class CursoController {
         try {
 <span class="fc" id="L137">            cursosCollection.deleteOne(Filters.eq(&quot;_id&quot;, new ObjectId(id)));</span>
 <span class="fc" id="L138">            return true;</span>
-<span class="nc" id="L139">        } catch (Exception e) {</span>
-<span class="nc" id="L140">            return false;</span>
+<span class="fc" id="L139">        } catch (Exception e) {</span>
+<span class="fc" id="L140">            return false;</span>
         }
     }
     
@@ -153,7 +153,7 @@ public class CursoController {
 <span class="fc bfc" id="L153" title="All 2 branches covered.">                curso.getHorario().toLowerCase().contains(criterioLower)) {</span>
 <span class="fc" id="L154">                resultados.add(curso);</span>
             }
-        }
+<span class="fc" id="L156">        }</span>
         
 <span class="fc" id="L158">        return resultados;</span>
     }

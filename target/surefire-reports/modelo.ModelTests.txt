@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: modelo.ModelTests
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s - in modelo.ModelTests
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s - in modelo.ModelTests
